@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Brorep.Application.Users.Queries.GetUserDetail;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,10 +20,11 @@ namespace Brorep.WebUI.Controllers
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        [HttpGet("[action]")]
+        [HttpGet("[action]"), Authorize("Admin")]
         public IEnumerable<WeatherForecast> WeatherForecasts()
         {
             var p = Mediator.Send(new GetUserDetailQuery { Id = 1 }).GetAwaiter().GetResult();
+
 
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast

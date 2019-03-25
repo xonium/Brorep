@@ -6,6 +6,7 @@ namespace Brorep.Persistence
 {
     public class BrorepInitializer
     {
+        
         private readonly Dictionary<int, User> Users = new Dictionary<int, User>();
 
         public static void Initialize(BrorepDbContext context)
@@ -18,25 +19,26 @@ namespace Brorep.Persistence
         {
             context.Database.EnsureCreated();
 
-            if (context.Users.Any())
-            {
-                return; // Db has been seeded
-            }
-
             
-            SeedUsers(context);
+
+            //if (context.Users.Any())
+            //{
+            //    return; // Db has been seeded
+            //}
+
+            //SeedUsers(context);
         }
 
         private void SeedUsers(BrorepDbContext context)
         {
-            Users.Add(1, new User { Email = "mail@temp.se", Firstname = "Charlotte", Lastname = "Purchasingson" });
+            /*Users.Add(1, new User { Email = "mail@temp.se", Firstname = "Charlotte", Lastname = "Purchasingson" });
 
             foreach (var user in Users.Values)
             {
                 context.Users.Add(user);
             }
 
-            context.SaveChanges();
+            context.SaveChanges();*/
         }
     }
 }

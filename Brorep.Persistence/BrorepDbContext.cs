@@ -11,6 +11,5 @@ namespace Brorep.Persistence
         {
         }
         
-        public DbSet<User> Users { get; set; }
     }
 }

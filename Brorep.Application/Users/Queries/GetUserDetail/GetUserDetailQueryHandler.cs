@@ -18,14 +18,14 @@ namespace Brorep.Application.Users.Queries.GetUserDetail
 
         public async Task<UserDetailModel> Handle(GetUserDetailQuery request, CancellationToken cancellationToken)
         {
-            var entity = await _context.Users.FindAsync(request.Id);
+            //var entity = await _context.FindAsync(request.Id);
 
-            if (entity == null)
-            {
-                throw new NotFoundException(nameof(User), request.Id);
-            }
+            //if (entity == null)
+            //{
+              //  throw new NotFoundException(nameof(User), request.Id);
+            //}
 
-            return UserDetailModel.Create(entity);
+            return UserDetailModel.Create(new User());
         }
     }
 }
