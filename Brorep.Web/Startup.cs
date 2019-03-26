@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
@@ -10,8 +11,10 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using System.Reflection;
 using MediatR;
 using Brorep.Application.Identity.Commands;
+using Brorep.Application.Infrastructure;
+using Brorep.Application.Infrastructure.AutoMapper;
 
-namespace Brorep.Web
+namespace Brorep.WebUI
 {
     public class Startup
     {
@@ -25,6 +28,9 @@ namespace Brorep.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add AutoMapper
+            services.AddAutoMapper(new Assembly[] { typeof(AutoMapperProfile).GetTypeInfo().Assembly });
+            
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -32,6 +38,7 @@ namespace Brorep.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
             services.AddMediatR(typeof(CreateIdentityCommand).GetTypeInfo().Assembly);
 
             // In production, the Angular files will be served from this directory

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Brorep.Application.Identity.Commands;
 
-namespace Brorep.Web.Controllers
+namespace Brorep.WebUI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

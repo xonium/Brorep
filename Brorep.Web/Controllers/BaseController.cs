@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Brorep.Web.Controllers
+namespace Brorep.WebUI.Controllers
 {
     public class BaseController : ControllerBase
     {
