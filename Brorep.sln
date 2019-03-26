@@ -22,19 +22,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentatio
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{221D5C4C-553C-42FE-963F-6A558AEFE027}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brorep.Application", "Brorep.Application\Brorep.Application.csproj", "{1D685448-1F67-41FC-B8FD-39B73A47D7DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Brorep.Application", "Brorep.Application\Brorep.Application.csproj", "{1D685448-1F67-41FC-B8FD-39B73A47D7DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brorep.Domain", "Brorep.Domain\Brorep.Domain.csproj", "{966095A6-7473-4305-B856-972EF80B68B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Brorep.Domain", "Brorep.Domain\Brorep.Domain.csproj", "{966095A6-7473-4305-B856-972EF80B68B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brorep.Infrastructure", "Brorep.Infrastructure\Brorep.Infrastructure.csproj", "{59C8DD76-58AA-493D-A959-A940E90C96C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Brorep.Infrastructure", "Brorep.Infrastructure\Brorep.Infrastructure.csproj", "{59C8DD76-58AA-493D-A959-A940E90C96C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brorep.Persistence", "Brorep.Persistence\Brorep.Persistence.csproj", "{0F4D01EE-486E-4283-8166-68D95FF85310}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Brorep.Persistence", "Brorep.Persistence\Brorep.Persistence.csproj", "{0F4D01EE-486E-4283-8166-68D95FF85310}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brorep.WebUI", "Brorep.WebUI\Brorep.WebUI.csproj", "{3A9F7210-DCD6-4804-BC86-4E64D75E65EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Brorep.WebUI", "Brorep.WebUI\Brorep.WebUI.csproj", "{3A9F7210-DCD6-4804-BC86-4E64D75E65EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brorep.Application.Tests", "Brorep.Application.Tests\Brorep.Application.Tests.csproj", "{799712BE-F0F3-4348-8AF5-9DB1A252E392}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Brorep.Application.Tests", "Brorep.Application.Tests\Brorep.Application.Tests.csproj", "{799712BE-F0F3-4348-8AF5-9DB1A252E392}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Brorep.Domain.Tests", "Brorep.Domain.Tests\Brorep.Domain.Tests.csproj", "{64D2C6DF-B621-4DB5-BFDF-7DE12EFAB423}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Brorep.Domain.Tests", "Brorep.Domain.Tests\Brorep.Domain.Tests.csproj", "{64D2C6DF-B621-4DB5-BFDF-7DE12EFAB423}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Brorep.Web", "Brorep.Web\Brorep.Web.csproj", "{4DD471AC-A879-4FA4-A27C-113D92AB661E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -74,6 +76,10 @@ Global
 		{64D2C6DF-B621-4DB5-BFDF-7DE12EFAB423}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64D2C6DF-B621-4DB5-BFDF-7DE12EFAB423}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64D2C6DF-B621-4DB5-BFDF-7DE12EFAB423}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DD471AC-A879-4FA4-A27C-113D92AB661E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DD471AC-A879-4FA4-A27C-113D92AB661E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DD471AC-A879-4FA4-A27C-113D92AB661E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DD471AC-A879-4FA4-A27C-113D92AB661E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -91,6 +97,7 @@ Global
 		{3A9F7210-DCD6-4804-BC86-4E64D75E65EB} = {E9BBD4AB-F5BA-4212-842E-0C21841E503E}
 		{799712BE-F0F3-4348-8AF5-9DB1A252E392} = {221D5C4C-553C-42FE-963F-6A558AEFE027}
 		{64D2C6DF-B621-4DB5-BFDF-7DE12EFAB423} = {221D5C4C-553C-42FE-963F-6A558AEFE027}
+		{4DD471AC-A879-4FA4-A27C-113D92AB661E} = {E9BBD4AB-F5BA-4212-842E-0C21841E503E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1CCF1063-49CF-4EC1-AD58-604FB57F5A78}

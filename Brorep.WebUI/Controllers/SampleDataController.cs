@@ -23,13 +23,11 @@ namespace Brorep.WebUI.Controllers
         [HttpGet("[action]"), Authorize("Admin")]
         public IEnumerable<WeatherForecast> WeatherForecasts()
         {
-            var p = Mediator.Send(new GetUserDetailQuery { Id = 1 }).GetAwaiter().GetResult();
-
 
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
-                DateFormatted = p.Email,
+                DateFormatted = "",
                 TemperatureC = rng.Next(-20, 55),
                 Summary = Summaries[rng.Next(Summaries.Length)]
             });

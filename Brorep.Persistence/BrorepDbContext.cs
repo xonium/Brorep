@@ -1,15 +1,13 @@
-﻿using Brorep.Domain;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace Brorep.Persistence
 {
-    public class BrorepDbContext : DbContext
+    public class BrorepDbContext : IdentityDbContext
     {
         public BrorepDbContext(DbContextOptions<BrorepDbContext> options)
             : base(options)
         {
         }
-        
     }
 }

@@ -37,7 +37,7 @@ namespace Brorep.WebUI
                 configuration.RootPath = "ClientApp/dist";
             });
             
-            services.AddMediatR(typeof(GetUserDetailQueryHandler).GetTypeInfo().Assembly);
+            services.AddMediatR(typeof(GetIdentityDetailQueryHandler).GetTypeInfo().Assembly);
 
             // Add DbContext using SQL Server Provider
             services.AddDbDependencies(Configuration.GetConnectionString("BrorepDatabase"));

@@ -18,8 +18,8 @@ namespace Brorep.Persistence
         public void SeedEverything(BrorepDbContext context)
         {
             context.Database.EnsureCreated();
-
             
+
 
             //if (context.Users.Any())
             //{
