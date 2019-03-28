@@ -1,9 +1,6 @@
-import { Component, Inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-
-const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-};
+import { Component } from '@angular/core';
+import {IdentityClient, CreateIdentityCommand} from '../brorep-api';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
@@ -11,29 +8,21 @@ const httpOptions = {
 })
 export class HomeComponent {
 
-  constructor(private http: HttpClient) {
+  registerUserForm: FormGroup;
+
+  constructor(private identityClient: IdentityClient, private fb: FormBuilder) {
+    this.registerUserForm = this.fb.group({
+      username: new FormControl(''),
+      email: new FormControl(''),
+      password: new FormControl(''),
+      confirmPassword: new FormControl('')
+    });
   }
 
-  onFormSubmit() {
-    const data = {
-      Username: '',
-      Email: 'Johan',
-      Password: 'Johan',
-      ConfirmPassword: 'Johan',
-    };
-
-    this.http.post<CreateIdentity>('api/identity/register', data, httpOptions).subscribe(result => {
-
+  onRegisterSubmit() {
+    const cmd = new CreateIdentityCommand(this.registerUserForm.value);
+    this.identityClient.register(cmd).subscribe(result => {
+      // todo
     }, error => console.error(error));
-
-    alert('tjena');
   }
-}
-
-interface CreateIdentity {
-  FirstName: string;
-  LastName: string;
-  Email: string;
-  Password: string;
-  ConfirmPassword: string;
 }

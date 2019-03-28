@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Brorep.Application.Identity.Commands;
@@ -18,6 +15,17 @@ namespace Brorep.WebUI.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesDefaultResponseType]
         public async Task<IActionResult> Register([FromBody]CreateIdentityCommand command)
+        {
+            await Mediator.Send(command);
+            return NoContent();
+        }
+
+        // POST api/identity/signin
+        [HttpPost]
+        [Route("signin")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> SignIn([FromBody]CreateIdentityCommand command)
         {
             await Mediator.Send(command);
             return NoContent();

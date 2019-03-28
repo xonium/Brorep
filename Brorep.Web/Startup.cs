@@ -13,6 +13,7 @@ using MediatR;
 using Brorep.Application.Identity.Commands;
 using Brorep.Application.Infrastructure;
 using Brorep.Application.Infrastructure.AutoMapper;
+using FluentValidation.AspNetCore;
 
 namespace Brorep.WebUI
 {
@@ -53,7 +54,10 @@ namespace Brorep.WebUI
             services.AddDefaultIdentity<IdentityUser>()
                 .AddEntityFrameworkStores<BrorepDbContext>();
             
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services
+                .AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateIdentityCommandValidator>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
