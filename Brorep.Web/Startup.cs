@@ -18,6 +18,12 @@ using Brorep.WebUI.Helpers;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Brorep.WebUI.Filters;
+using Microsoft.AspNetCore.Authorization;
+using Brorep.Application.Settings;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using System.Collections.Generic;
+using Brorep.WebUI.Conventions;
 
 namespace Brorep.WebUI
 {
@@ -80,13 +86,25 @@ namespace Brorep.WebUI
                     };
                 });
 
+            services.AddAuthorization(option =>
+            {
+                option.AddPolicy("apipolicy", b =>
+                {
+                    b.RequireAuthenticatedUser();
+                    b.AuthenticationSchemes = new List<string> { JwtBearerDefaults.AuthenticationScheme };
+                });
+            });
+
             services.AddDefaultIdentity<IdentityUser>()
                 .AddEntityFrameworkStores<BrorepDbContext>();
 
-            services.AddScoped<IUserService, UserService>();
+            services.AddSingleton(typeof(ISettings), new Settings(appSettings.Secret));
 
             services
-                .AddMvc()
+                .AddMvc(options => {
+                    options.Conventions.Add(new AddAuthorizeFiltersControllerConvention());
+                    options.Filters.Add(typeof(CustomExceptionFilterAttribute));
+                })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateIdentityCommandValidator>());
         }
@@ -105,7 +123,7 @@ namespace Brorep.WebUI
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();

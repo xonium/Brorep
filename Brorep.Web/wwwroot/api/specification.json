@@ -46,12 +46,12 @@
         }
       }
     },
-    "/api/Identity/signin": {
+    "/api/Identity/createtoken": {
       "post": {
         "tags": [
           "Identity"
         ],
-        "operationId": "Identity_SignIn",
+        "operationId": "Identity_CreateToken",
         "requestBody": {
           "x-name": "command",
           "content": {
@@ -65,7 +65,7 @@
           "x-position": 1
         },
         "responses": {
-          "204": {
+          "200": {
             "description": ""
           },
           "default": {
@@ -79,27 +79,6 @@
                       "$ref": "#/components/schemas/ProblemDetails"
                     }
                   ]
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Identity/test": {
-      "get": {
-        "tags": [
-          "Identity"
-        ],
-        "operationId": "Identity_GetAll",
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/octet-stream": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
                 }
               }
             }

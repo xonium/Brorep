@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Brorep.Application.Identity.Commands;
-using Brorep.WebUI.Helpers;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Brorep.WebUI.Controllers
@@ -11,15 +10,9 @@ namespace Brorep.WebUI.Controllers
     [ApiController]
     public class IdentityController : BaseController
     {
-        private IUserService _userService;
-        public IdentityController(IUserService userService)
-        {
-            _userService = userService;
-        }
-
-        // POST api/identity/register
         [HttpPost]
         [Route("register")]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesDefaultResponseType]
         public async Task<IActionResult> Register([FromBody]CreateIdentityCommand command)
@@ -28,23 +21,15 @@ namespace Brorep.WebUI.Controllers
             return NoContent();
         }
         
-        // POST api/identity/signin
         [HttpPost]
-        [Route("signin")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [Route("createtoken")]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
-        public IActionResult SignIn([FromBody]CreateTokenFromIdentityCommand command)
+        public async Task<IActionResult> CreateToken([FromBody]CreateTokenFromIdentityCommand command)
         {
-            return Ok(_userService.Authenticate(command.Username, command.Password));
+            var token = await Mediator.Send(command);
+            return Ok(token);
         }
-
-        [HttpGet]
-        [Authorize]
-        [Route("test")]
-        public IActionResult GetAll()
-        {
-            return Ok("DET GICK BRA");
-        }
-
     }
 }
