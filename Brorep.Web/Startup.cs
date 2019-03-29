@@ -98,6 +98,12 @@ namespace Brorep.WebUI
             services.AddDefaultIdentity<IdentityUser>()
                 .AddEntityFrameworkStores<BrorepDbContext>();
 
+            // Customise default API behavour
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
+
             services.AddSingleton(typeof(ISettings), new Settings(appSettings.Secret));
 
             services
@@ -128,7 +134,6 @@ namespace Brorep.WebUI
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             app.UseCookiePolicy();
-
             app.UseAuthentication();
 
             // global cors policy
