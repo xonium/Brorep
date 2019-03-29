@@ -16,7 +16,8 @@ export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
 export interface IIdentityClient {
     register(command: CreateIdentityCommand): Observable<void>;
-    signIn(command: CreateIdentityCommand): Observable<void>;
+    signIn(command: CreateTokenFromIdentityCommand): Observable<void>;
+    getAll(): Observable<FileResponse>;
 }
 
 @Injectable()
@@ -80,7 +81,7 @@ export class IdentityClient implements IIdentityClient {
         }
     }
 
-    signIn(command: CreateIdentityCommand): Observable<void> {
+    signIn(command: CreateTokenFromIdentityCommand): Observable<void> {
         let url_ = this.baseUrl + "/api/Identity/signin";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -128,6 +129,52 @@ export class IdentityClient implements IIdentityClient {
             return throwException("A server error occurred.", status, _responseText, _headers, resultdefault);
             }));
         }
+    }
+
+    getAll(): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api/Identity/test";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<FileResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<FileResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<FileResponse> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FileResponse>(<any>null);
     }
 }
 
@@ -229,6 +276,53 @@ export interface ICreateIdentityCommand {
     email?: string | undefined;
     password?: string | undefined;
     confirmPassword?: string | undefined;
+}
+
+export class CreateTokenFromIdentityCommand implements ICreateTokenFromIdentityCommand {
+    username?: string | undefined;
+    password?: string | undefined;
+
+    constructor(data?: ICreateTokenFromIdentityCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.username = data["username"];
+            this.password = data["password"];
+        }
+    }
+
+    static fromJS(data: any): CreateTokenFromIdentityCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateTokenFromIdentityCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["username"] = this.username;
+        data["password"] = this.password;
+        return data; 
+    }
+}
+
+export interface ICreateTokenFromIdentityCommand {
+    username?: string | undefined;
+    password?: string | undefined;
+}
+
+export interface FileResponse {
+    data: Blob;
+    status: number;
+    fileName?: string;
+    headers?: { [name: string]: any };
 }
 
 export class SwaggerException extends Error {
