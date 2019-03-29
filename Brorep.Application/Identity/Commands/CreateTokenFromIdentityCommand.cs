@@ -43,9 +43,9 @@ namespace Brorep.Application.Identity.Commands
             var identityUser = await _userManager.FindByNameAsync(request.Username);
             if (identityUser == null)
             {
-                throw new NotFoundException("username", request.Username);
+                throw new AuthenticationException();
             }
-
+            
             var signInResult = await _signInManager.CheckPasswordSignInAsync(identityUser, request.Password, false);
             if (!signInResult.Succeeded) {
                 throw new AuthenticationException();
@@ -59,7 +59,7 @@ namespace Brorep.Application.Identity.Commands
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, identityUser.Id)
+                    new Claim(ClaimTypes.Name, identityUser.UserName)
                 }),
                 Expires = expires,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

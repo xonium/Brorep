@@ -11,13 +11,33 @@ namespace Brorep.WebUI.Filters
     {
         public override void OnException(ExceptionContext context)
         {
+            var problemDetails = new ProblemDetails
+            {
+                Instance = $"urn:brorep:error:{context.Exception.GetType().Name}:{Guid.NewGuid()}",
+                Title = context.Exception.Message
+            };
+
             if (context.Exception is ValidationException)
             {
+                var vdp = new ValidationProblemDetails(((ValidationException)context.Exception).Failures);
+
                 context.HttpContext.Response.ContentType = "application/json";
                 context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                context.Result = new JsonResult(
-                    ((ValidationException)context.Exception).Failures);
 
+                vdp.Status = (int)HttpStatusCode.BadRequest;
+                vdp.Detail = "See errors for more information.";
+                vdp.Instance = problemDetails.Instance;
+                vdp.Title = problemDetails.Title;
+                
+                context.Result = new JsonResult(vdp);
+                return;
+            }
+            if(context.Exception is AuthenticationException)
+            {
+                context.HttpContext.Response.ContentType = "application/json";
+                context.HttpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                problemDetails.Status = (int)HttpStatusCode.Unauthorized;
+                context.Result = new JsonResult(problemDetails);
                 return;
             }
 
@@ -28,13 +48,14 @@ namespace Brorep.WebUI.Filters
                 code = HttpStatusCode.NotFound;
             }
 
-            context.HttpContext.Response.ContentType = "application/json";
+            context.HttpContext.Response.ContentType = "application/problem+json";
             context.HttpContext.Response.StatusCode = (int)code;
-            context.Result = new JsonResult(new
-            {
-                error = new[] { context.Exception.Message },
-                stackTrace = context.Exception.StackTrace
-            });
+
+            problemDetails.Status = (int)code;
+
+            context.Result = new JsonResult(problemDetails);
+
+            //todo: log error
         }
     }
 }

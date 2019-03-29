@@ -16,7 +16,8 @@ export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
 export interface IIdentityClient {
     register(command: CreateIdentityCommand): Observable<void>;
-    createToken(command: CreateTokenFromIdentityCommand): Observable<void>;
+    createToken(command: CreateTokenFromIdentityCommand): Observable<TokenDto | null>;
+    getUser(): Observable<UserDto | null>;
 }
 
 @Injectable()
@@ -70,17 +71,22 @@ export class IdentityClient implements IIdentityClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return _observableOf<void>(<any>null);
             }));
-        } else {
+        } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let resultdefault: any = null;
-            let resultDatadefault = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            resultdefault = resultDatadefault ? ProblemDetails.fromJS(resultDatadefault) : <any>null;
-            return throwException("A server error occurred.", status, _responseText, _headers, resultdefault);
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = resultData400 ? ValidationProblemDetails.fromJS(resultData400) : <any>null;
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
+        return _observableOf<void>(<any>null);
     }
 
-    createToken(command: CreateTokenFromIdentityCommand): Observable<void> {
+    createToken(command: CreateTokenFromIdentityCommand): Observable<TokenDto | null> {
         let url_ = this.baseUrl + "/api/Identity/createtoken";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -92,6 +98,7 @@ export class IdentityClient implements IIdentityClient {
             responseType: "blob",
             headers: new HttpHeaders({
                 "Content-Type": "application/json", 
+                "Accept": "application/json"
             })
         };
 
@@ -102,14 +109,14 @@ export class IdentityClient implements IIdentityClient {
                 try {
                     return this.processCreateToken(<any>response_);
                 } catch (e) {
-                    return <Observable<void>><any>_observableThrow(e);
+                    return <Observable<TokenDto | null>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<void>><any>_observableThrow(response_);
+                return <Observable<TokenDto | null>><any>_observableThrow(response_);
         }));
     }
 
-    protected processCreateToken(response: HttpResponseBase): Observable<void> {
+    protected processCreateToken(response: HttpResponseBase): Observable<TokenDto | null> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -118,16 +125,86 @@ export class IdentityClient implements IIdentityClient {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(<any>null);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 ? TokenDto.fromJS(resultData200) : <any>null;
+            return _observableOf(result200);
             }));
-        } else {
+        } else if (status === 401) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let resultdefault: any = null;
-            let resultDatadefault = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            resultdefault = resultDatadefault ? ProblemDetails.fromJS(resultDatadefault) : <any>null;
-            return throwException("A server error occurred.", status, _responseText, _headers, resultdefault);
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = resultData401 ? ProblemDetails.fromJS(resultData401) : <any>null;
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = resultData400 ? ValidationProblemDetails.fromJS(resultData400) : <any>null;
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
+        return _observableOf<TokenDto | null>(<any>null);
+    }
+
+    getUser(): Observable<UserDto | null> {
+        let url_ = this.baseUrl + "/api/Identity/user";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetUser(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetUser(<any>response_);
+                } catch (e) {
+                    return <Observable<UserDto | null>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<UserDto | null>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetUser(response: HttpResponseBase): Observable<UserDto | null> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 ? UserDto.fromJS(resultData200) : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = resultData401 ? ProblemDetails.fromJS(resultData401) : <any>null;
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<UserDto | null>(<any>null);
     }
 }
 
@@ -183,6 +260,51 @@ export interface IProblemDetails {
     instance?: string | undefined;
 }
 
+export class ValidationProblemDetails extends ProblemDetails implements IValidationProblemDetails {
+    errors?: { [key: string] : string[]; } | undefined;
+
+    constructor(data?: IValidationProblemDetails) {
+        super(data);
+    }
+
+    init(data?: any) {
+        super.init(data);
+        if (data) {
+            if (data["errors"]) {
+                this.errors = {} as any;
+                for (let key in data["errors"]) {
+                    if (data["errors"].hasOwnProperty(key))
+                        this.errors![key] = data["errors"][key] !== undefined ? data["errors"][key] : [];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): ValidationProblemDetails {
+        data = typeof data === 'object' ? data : {};
+        let result = new ValidationProblemDetails();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (this.errors) {
+            data["errors"] = {};
+            for (let key in this.errors) {
+                if (this.errors.hasOwnProperty(key))
+                    data["errors"][key] = this.errors[key];
+            }
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IValidationProblemDetails extends IProblemDetails {
+    errors?: { [key: string] : string[]; } | undefined;
+}
+
 export class CreateIdentityCommand implements ICreateIdentityCommand {
     username?: string | undefined;
     email?: string | undefined;
@@ -231,6 +353,46 @@ export interface ICreateIdentityCommand {
     confirmPassword?: string | undefined;
 }
 
+export class TokenDto implements ITokenDto {
+    token?: string | undefined;
+    expires?: Date;
+
+    constructor(data?: ITokenDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.token = data["token"];
+            this.expires = data["expires"] ? new Date(data["expires"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): TokenDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TokenDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["token"] = this.token;
+        data["expires"] = this.expires ? this.expires.toISOString() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface ITokenDto {
+    token?: string | undefined;
+    expires?: Date;
+}
+
 export class CreateTokenFromIdentityCommand implements ICreateTokenFromIdentityCommand {
     username?: string | undefined;
     password?: string | undefined;
@@ -269,6 +431,46 @@ export class CreateTokenFromIdentityCommand implements ICreateTokenFromIdentityC
 export interface ICreateTokenFromIdentityCommand {
     username?: string | undefined;
     password?: string | undefined;
+}
+
+export class UserDto implements IUserDto {
+    email?: string | undefined;
+    user?: string | undefined;
+
+    constructor(data?: IUserDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.email = data["email"];
+            this.user = data["user"];
+        }
+    }
+
+    static fromJS(data: any): UserDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["email"] = this.email;
+        data["user"] = this.user;
+        return data; 
+    }
+}
+
+export interface IUserDto {
+    email?: string | undefined;
+    user?: string | undefined;
 }
 
 export class SwaggerException extends Error {

@@ -1,9 +1,20 @@
 <div class="row">
-  <div class="col-md-6">
+  <div class="col-md-8">
     STUFF
   </div>
-  <div class="col-md-6">
-    logga in
+  <div class="col-md-4">
+    <h3>Login</h3>
+    <form [formGroup]="signInForm" (ngSubmit)="onSignInSubmit()">
+        <div class="form-group">
+            <label for="susername">Username</label>
+            <input type="text" class="form-control" name="susername" id="susername" placeholder="Username" formControlName="susername">
+        </div>
+        <div class="form-group">
+            <label for="spassword">Password</label>
+            <input type="password" class="form-control" name="spassword" placeholder="Password" formControlName="spassword">
+        </div>
+        <button type="submit" class="btn btn-primary">Sign in</button>
+    </form>
   </div>
 </div>
 

@@ -11,6 +11,10 @@ import { HomeComponent } from './home/home.component';
 import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { IdentityClient } from './brorep-api';
+import {JwtService} from './services/jwt.service';
+import {UserService} from './services/user.service';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import {AddAuthenticationInterceptor} from './interceptor/addauthenticationheader.interceptor';
 
 @NgModule({
   declarations: [
@@ -31,7 +35,15 @@ import { IdentityClient } from './brorep-api';
       { path: 'fetch-data', component: FetchDataComponent },
     ])
   ],
-  providers: [IdentityClient],
+  providers: [IdentityClient, JwtService, UserService, {
+    provide: HTTP_INTERCEPTORS,
+    useClass: AddAuthenticationInterceptor,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(private userService: UserService) {
+    this.userService.populate(); //load current user if token exists
+  }
+}
