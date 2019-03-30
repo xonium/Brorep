@@ -1,1 +1,16 @@
 <h1>workout</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form [formGroup]="loadVideoForm" (ngSubmit)="onLoadVideoFormSubmit()">
+            <div class="form-group">
+                <label for="videoUrl">Load video from url</label>
+                <input type="text" class="form-control" name="videoUrl" id="videoUrl" placeholder="videoUrl" formControlName="videoUrl">
+            </div>
+            <button type="submit" class="btn btn-primary">Load video</button>
+        </form>
+    </div>
+    <div class="col-md-4">
+        <app-video [videoUrl]="loadThisVideo"></app-video>
+    </div>
+</div>

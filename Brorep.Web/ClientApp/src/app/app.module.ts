@@ -12,6 +12,7 @@ import { JudgeComponent } from './components/judge/judge.component';
 import { LeaderBoardComponent } from './components/leaderboard/leaderboard.component';
 import { UserComponent } from './components/user/user.component';
 import { WorkoutComponent } from './components/workout/workout.component';
+import { VideoComponent } from './components/video/video.component';
 
 import { IdentityClient } from './brorep-api';
 import { JwtService } from './services/jwt.service';
@@ -28,7 +29,8 @@ import { AddAuthenticationInterceptor } from './interceptors/addauthenticationhe
     JudgeComponent,
     LeaderBoardComponent,
     UserComponent,
-    WorkoutComponent
+    WorkoutComponent,
+    VideoComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
