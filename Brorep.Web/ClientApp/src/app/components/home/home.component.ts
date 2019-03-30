@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import {IdentityClient, CreateIdentityCommand, CreateTokenFromIdentityCommand} from '../brorep-api';
+import {IdentityClient, CreateIdentityCommand, CreateTokenFromIdentityCommand} from '../../brorep-api';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { JwtService } from '../services/jwt.service';
-import { UserService } from '../services/user.service';
+import { JwtService } from '../../services/jwt.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-home',
@@ -12,8 +12,9 @@ export class HomeComponent {
 
   signInForm: FormGroup;
   registerUserForm: FormGroup;
+  isAuth: boolean;
 
-  constructor(private identityClient: IdentityClient, private fb: FormBuilder, private jwtService: JwtService, 
+  constructor(private identityClient: IdentityClient, private fb: FormBuilder, private jwtService: JwtService,
     private userService: UserService) {
     this.registerUserForm = this.fb.group({
       username: new FormControl(''),
@@ -25,6 +26,12 @@ export class HomeComponent {
     this.signInForm = this.fb.group({
       susername: new FormControl(''),
       spassword: new FormControl('')
+    });
+  }
+
+  ngOnInit(): void {
+    this.userService.isAuthenticated.subscribe(val => {
+      this.isAuth = val;
     });
   }
 

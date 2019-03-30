@@ -6,23 +6,29 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
-import { NavMenuComponent } from './nav-menu/nav-menu.component';
-import { HomeComponent } from './home/home.component';
-import { CounterComponent } from './counter/counter.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
+import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
+import { HomeComponent } from './components/home/home.component';
+import { JudgeComponent } from './components/judge/judge.component';
+import { LeaderBoardComponent } from './components/leaderboard/leaderboard.component';
+import { UserComponent } from './components/user/user.component';
+import { WorkoutComponent } from './components/workout/workout.component';
+
 import { IdentityClient } from './brorep-api';
-import {JwtService} from './services/jwt.service';
-import {UserService} from './services/user.service';
+import { JwtService } from './services/jwt.service';
+import { UserService } from './services/user.service';
+
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import {AddAuthenticationInterceptor} from './interceptor/addauthenticationheader.interceptor';
+import { AddAuthenticationInterceptor } from './interceptors/addauthenticationheader.interceptor';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
     HomeComponent,
-    CounterComponent,
-    FetchDataComponent
+    JudgeComponent,
+    LeaderBoardComponent,
+    UserComponent,
+    WorkoutComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -31,8 +37,10 @@ import {AddAuthenticationInterceptor} from './interceptor/addauthenticationheade
     FormsModule, ReactiveFormsModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'counter', component: CounterComponent },
-      { path: 'fetch-data', component: FetchDataComponent },
+      { path: 'judge', component: JudgeComponent },
+      { path: 'leaderboard', component: LeaderBoardComponent },
+      { path: 'user', component: UserComponent },
+      { path: 'workout', component: WorkoutComponent },
     ])
   ],
   providers: [IdentityClient, JwtService, UserService, {

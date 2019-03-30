@@ -24,6 +24,10 @@ using Brorep.Application.Settings;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using System.Collections.Generic;
 using Brorep.WebUI.Conventions;
+using NSwag.SwaggerGeneration.Processors.Security;
+using NSwag;
+using NSwag.AspNetCore;
+using NSwag.SwaggerGeneration.WebApi;
 
 namespace Brorep.WebUI
 {
@@ -103,6 +107,33 @@ namespace Brorep.WebUI
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
+            
+            services.AddSwaggerDocument(c =>
+            {
+                c.DocumentName = "apidocs";
+                c.Title = "Sample API";
+                c.Version = "v1";
+                c.Description = "The sample API documentation description.";
+                c.DocumentProcessors.Add(new SecurityDefinitionAppender("JWT token", new SwaggerSecurityScheme
+                {
+                    Type = SwaggerSecuritySchemeType.ApiKey,
+                    Name = "Authorization",
+                    Description = "Copy 'Bearer ' + valid JWT token into field",
+                    In = SwaggerSecurityApiKeyLocation.Header
+
+                }));           
+                c.OperationProcessors.Add(new OperationSecurityScopeProcessor("JWT token"));
+
+                c.PostProcess = document =>
+                {
+                    document.Info.Contact = new SwaggerContact
+                    {
+                        Name = "My Company",
+                        Email = "info@mycompany.com",
+                        Url = "https://www.mycompany.com"
+                    };
+                };
+            });
 
             services.AddSingleton(typeof(ISettings), new Settings(appSettings.Secret));
 
@@ -141,6 +172,17 @@ namespace Brorep.WebUI
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader());
+
+            app.UseSwagger(settings =>
+            {
+                settings.DocumentName = "Jesus";
+            });
+            
+            app.UseSwaggerUi3(settings =>
+            {
+                settings.Path = "/api";
+                settings.DocumentPath = "/api/specification.json";
+            });
 
             app.UseMvc(routes =>
             {

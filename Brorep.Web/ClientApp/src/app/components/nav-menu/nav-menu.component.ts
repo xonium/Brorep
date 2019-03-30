@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import {UserService} from '../services/user.service';
-import { UserDto } from '../brorep-api';
+import { UserService } from '../../services/user.service';
+import { UserDto } from '../../brorep-api';
 
 @Component({
   selector: 'app-nav-menu',
@@ -28,5 +28,4 @@ export class NavMenuComponent {
   toggle() {
     this.isExpanded = !this.isExpanded;
   }
-  
 }
