@@ -11,6 +11,13 @@
         </form>
     </div>
     <div class="col-md-4">
-        <app-video [videoUrl]="loadThisVideo"></app-video>
+        <app-video [videoUrl]="loadThisVideo" 
+        (errorEvent)="onVideoError($event)" 
+        (progressEvent)="onVideoProgress($event)"
+        (readyEvent)="onVideoReady($event)"></app-video>
+
+        <div class="video-controls" *ngIf="videoReady">
+            <input type="range" class="video-seeker" [value]="seekerLocation" (click)="onSetSeekerLocation" step="any" min="0" max="1">
+        </div>  
     </div>
 </div>
