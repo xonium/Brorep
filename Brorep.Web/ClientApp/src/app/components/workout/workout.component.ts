@@ -11,7 +11,10 @@ export class WorkoutComponent implements OnInit {
     loadThisVideo: string;
     loadVideoForm: FormGroup;
     seekerLocation: number;
+    setSeekerLocation: number;
     videoReady: boolean;
+    isVideoPlaying: boolean;
+    videoShouldPlay: boolean;
 
     constructor(private fb: FormBuilder) {
         this.loadVideoForm = this.fb.group({
@@ -25,6 +28,14 @@ export class WorkoutComponent implements OnInit {
         this.loadThisVideo = this.loadVideoForm.get('videoUrl').value;
     }
 
+    onVideoPauseClick() {
+        this.videoShouldPlay = false;
+    }
+
+    onVideoPlayClick() {
+        this.videoShouldPlay = true;
+    }
+
     onVideoReady(event) {
         this.videoReady = true;
     }
@@ -33,12 +44,21 @@ export class WorkoutComponent implements OnInit {
         console.log(error);
     }
 
-    onSetSeekerLocation(value) {
-        console.log('SEEKERLOCATION', value);
+    onSetSeekerLocation(event) {
+        const target = event.target || event.srcElement || event.currentTarget;
+        const value = target.value;
+        this.setSeekerLocation = value;
     }
 
     onVideoProgress(progress) {
-        console.log(progress);
         this.seekerLocation = progress.played;
+    }
+
+    onVideoPlay(isPlaying) {
+        this.isVideoPlaying = isPlaying;
+    }
+
+    onVideoPause(isPausing) {
+        this.isVideoPlaying = !isPausing;
     }
 }

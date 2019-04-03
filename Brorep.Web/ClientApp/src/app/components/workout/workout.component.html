@@ -11,13 +11,27 @@
         </form>
     </div>
     <div class="col-md-4">
-        <app-video [videoUrl]="loadThisVideo" 
-        (errorEvent)="onVideoError($event)" 
-        (progressEvent)="onVideoProgress($event)"
-        (readyEvent)="onVideoReady($event)"></app-video>
+        <app-video 
+            [videoUrl]="loadThisVideo"
+            [videoPlay]="videoShouldPlay"
+            [setSeekerLocation]="setSeekerLocation"
+            (errorEvent)="onVideoError($event)" 
+            (progressEvent)="onVideoProgress($event)"
+            (readyEvent)="onVideoReady($event)"
+            (videoPlayEvent)="onVideoPlay($event)"
+            (videoPauseEvent)="onVideoPause($event)">
+        </app-video>
 
         <div class="video-controls" *ngIf="videoReady">
-            <input type="range" class="video-seeker" [value]="seekerLocation" (click)="onSetSeekerLocation" step="any" min="0" max="1">
-        </div>  
+            <input type="range" class="video-seeker" [value]="seekerLocation" (click)="onSetSeekerLocation($event)" step="any" min="0" max="1">
+
+            <ng-container *ngIf="isVideoPlaying; then videoplayingTemplate; else videoPausedTemplate"></ng-container>
+            <ng-template #videoplayingTemplate>
+                <button type="button" class="btn btn-primary" (click)="onVideoPauseClick()">Pause</button>
+            </ng-template>
+            <ng-template #videoPausedTemplate>
+                <button type="button" class="btn btn-primary" (click)="onVideoPlayClick()">Play</button>
+            </ng-template>
+        </div>
     </div>
 </div>
