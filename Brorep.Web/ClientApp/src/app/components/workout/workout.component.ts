@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 
+interface RecordedRep {
+    startTime: number;
+    stopTime: number;
+    length: number;
+}
+
 @Component({
     selector: 'app-workout',
     templateUrl: './workout.component.html',
@@ -15,11 +21,18 @@ export class WorkoutComponent implements OnInit {
     videoReady: boolean;
     isVideoPlaying: boolean;
     videoShouldPlay: boolean;
+    isRecording: boolean;
+    startRecord: number;
+    stopRecord: number;
+    recordedReps: RecordedRep[];
 
     constructor(private fb: FormBuilder) {
         this.loadVideoForm = this.fb.group({
             videoUrl: new FormControl('')
           });
+
+          this.recordedReps = [];
+          this.isRecording = false;
     }
 
     ngOnInit(): void { }
@@ -45,6 +58,8 @@ export class WorkoutComponent implements OnInit {
     }
 
     onSetSeekerLocation(event) {
+        if (this.isRecording) { return; }
+
         const target = event.target || event.srcElement || event.currentTarget;
         const value = target.value;
         this.setSeekerLocation = value;
@@ -60,5 +75,24 @@ export class WorkoutComponent implements OnInit {
 
     onVideoPause(isPausing) {
         this.isVideoPlaying = !isPausing;
+    }
+
+    onVideoRecordClick() {
+        this.isRecording = !this.isRecording;
+
+        if (this.isRecording) {
+            this.startRecord = this.seekerLocation;
+        } else {
+            this.stopRecord = this.seekerLocation;
+
+            this.recordedReps.push(
+            {
+                startTime: this.startRecord * 100,
+                stopTime: this.stopRecord * 100,
+                length: (this.stopRecord - this.startRecord) * 100
+            });
+
+            console.log(this.recordedReps);
+        }
     }
 }

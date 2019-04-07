@@ -52,12 +52,12 @@ export class VideoComponent implements OnInit, OnChanges  {
             this._videoUrl = inputvideoUrl.currentValue;
 
             const url = this.videoUrl;
-
+            this._videoPlay = true;
             RenderReactPlayer(container,
                 Object.assign(videoSettings,
                     {
                         url,
-                        playing: true
+                        playing: this._videoPlay
                     }));
         }
 
@@ -75,6 +75,7 @@ export class VideoComponent implements OnInit, OnChanges  {
 
         if (changes.setSeekerLocation) {
             const inputSeekerLocation: SimpleChange = changes.setSeekerLocation;
+
             if (this._reactPlayer) {
                 this._reactPlayer.seekTo(inputSeekerLocation.currentValue);
             }
@@ -99,6 +100,7 @@ export class VideoComponent implements OnInit, OnChanges  {
         function onVideoPause() {
             that.videoPauseEvent.emit(true);
         }
+
     }
   }
 
