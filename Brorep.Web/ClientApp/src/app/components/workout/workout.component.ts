@@ -1,11 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
-
-interface RecordedRep {
-    startTime: number;
-    stopTime: number;
-    length: number;
-}
+import { RecordedRep } from 'src/app/models/recordedrep.models';
 
 @Component({
     selector: 'app-workout',
@@ -71,10 +66,12 @@ export class WorkoutComponent implements OnInit {
 
     onVideoPlay(isPlaying) {
         this.isVideoPlaying = isPlaying;
+        this.videoShouldPlay = isPlaying;
     }
 
     onVideoPause(isPausing) {
         this.isVideoPlaying = !isPausing;
+        this.videoShouldPlay = !isPausing;
     }
 
     onVideoRecordClick() {

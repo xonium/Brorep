@@ -12,6 +12,7 @@
     </div>
     <div class="col-md-4">
         <app-video 
+            videoId="workout-component-video"
             [videoUrl]="loadThisVideo"
             [videoPlay]="videoShouldPlay"
             [setSeekerLocation]="setSeekerLocation"
@@ -35,10 +36,15 @@
             <ng-template #videoplayingTemplate>
                 <button type="button" class="btn btn-primary" (click)="onVideoPauseClick()">Pause</button>
                 <button type="button" class="btn btn-primary" (click)="onVideoRecordClick()">{{isRecording ? 'recording' : 'record'}}</button>
+                <button type="button" class="btn btn-primary" (click)="onVideoRecordClick()" *ngIf="this.recordedReps.length > 0">Preview</button>
             </ng-template>
             <ng-template #videoPausedTemplate>
                 <button type="button" class="btn btn-primary" (click)="onVideoPlayClick()">Play</button>
+                <button type="button" class="btn btn-primary" (click)="onVideoRecordClick()" *ngIf="this.recordedReps.length > 0">Preview</button>
             </ng-template>
         </div>
+    </div>
+    <div class="col-md-4" *ngIf="this.recordedReps.length > 0">
+        <app-workout-preview [recordedReps]="this.recordedReps" [videoUrl]="loadThisVideo"></app-workout-preview>
     </div>
 </div>

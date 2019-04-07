@@ -3,13 +3,14 @@ import { RenderReactPlayer } from './reactplayer.standalone';
 @Component({
   selector: 'app-video',
   template: `<div class="player-wrapper">
-      <div id="player" class="react-player embed-responsive embed-responsive-16by9">
+      <div id={{videoId}} class="react-player embed-responsive embed-responsive-16by9">
       </div>
     </div>`
 })
 export class VideoComponent implements OnInit, OnChanges  {
-  constructor() { }
   private _reactPlayer: any;
+
+  @Input() videoId: string;
 
   @Input() videoUrl: string;
   private _videoUrl: string;
@@ -25,17 +26,27 @@ export class VideoComponent implements OnInit, OnChanges  {
   @Output() videoPlayEvent = new EventEmitter();
   @Output() videoPauseEvent = new EventEmitter();
 
+  constructor() {}
+
   ngOnInit() {
-        if (this._videoUrl) {
-            const container = document.getElementById('player');
+        if (this.videoUrl) {
+            const container = document.getElementById(this.videoId);
+            if (!container) {
+                return;
+            }
             const url = this.videoUrl;
-            RenderReactPlayer(container, { url, playing: true });
+            RenderReactPlayer(container, { url, playing: this.videoPlay });
         }
     }
 
     ngOnChanges(changes: SimpleChanges): void {
+        const container = document.getElementById(this.videoId);
+        if (!container) {
+            return;
+        }
+
         const that = this;
-        const container = document.getElementById('player');
+
         const videoSettings = {
             width: '100%',
             height: '100%',
@@ -86,6 +97,7 @@ export class VideoComponent implements OnInit, OnChanges  {
         }
 
         function onVideoPlay() {
+            that._videoPlay = true;
             that.videoPlayEvent.emit(true);
         }
 
@@ -98,6 +110,7 @@ export class VideoComponent implements OnInit, OnChanges  {
         }
 
         function onVideoPause() {
+            that._videoPlay = false;
             that.videoPauseEvent.emit(true);
         }
 

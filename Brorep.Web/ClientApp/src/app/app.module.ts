@@ -20,6 +20,7 @@ import { UserService } from './services/user.service';
 
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AddAuthenticationInterceptor } from './interceptors/addauthenticationheader.interceptor';
+import { PreviewComponent } from './components/workout/preview/preview.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { AddAuthenticationInterceptor } from './interceptors/addauthenticationhe
     LeaderBoardComponent,
     UserComponent,
     WorkoutComponent,
-    VideoComponent
+    VideoComponent,
+    PreviewComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -54,6 +56,6 @@ import { AddAuthenticationInterceptor } from './interceptors/addauthenticationhe
 })
 export class AppModule {
   constructor(private userService: UserService) {
-    this.userService.populate(); //load current user if token exists
+    this.userService.populate(); // load current user if token exists
   }
 }

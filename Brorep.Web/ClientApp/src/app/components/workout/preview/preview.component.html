@@ -1,0 +1,10 @@
+<app-video 
+    videoId="workout-preview-video"
+    videoUrl="{{videoUrl}}"
+    videoPlay="true"
+    (errorEvent)="onVideoError($event)" 
+    (progressEvent)="onVideoProgress($event)"
+    (readyEvent)="onVideoReady($event)"
+    (videoPlayEvent)="onVideoPlay($event)"
+    (videoPauseEvent)="onVideoPause($event)">
+</app-video>
