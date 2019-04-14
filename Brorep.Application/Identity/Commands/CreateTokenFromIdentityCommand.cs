@@ -51,6 +51,8 @@ namespace Brorep.Application.Identity.Commands
                 throw new AuthenticationException();
             };
 
+            await _signInManager.SignInAsync(identityUser, false);
+
             // authentication successful so generate jwt token
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_settings.Secret);

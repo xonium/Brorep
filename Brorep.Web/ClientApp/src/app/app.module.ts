@@ -21,6 +21,8 @@ import { UserService } from './services/user.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AddAuthenticationInterceptor } from './interceptors/addauthenticationheader.interceptor';
 import { PreviewComponent } from './components/workout/preview/preview.component';
+import { LoadVideoComponent } from './components/workout/loadvideo/loadvideo.component';
+import { VideoEditComponent } from './components/workout/videoedit/videoedit.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,9 @@ import { PreviewComponent } from './components/workout/preview/preview.component
     UserComponent,
     WorkoutComponent,
     VideoComponent,
-    PreviewComponent
+    PreviewComponent,
+    LoadVideoComponent,
+    VideoEditComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

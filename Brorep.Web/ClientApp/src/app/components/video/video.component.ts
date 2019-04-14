@@ -1,13 +1,14 @@
-import { Component, OnInit, Input, SimpleChanges, SimpleChange, EventEmitter, Output, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, SimpleChange,
+    EventEmitter, Output, OnChanges, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { RenderReactPlayer } from './reactplayer.standalone';
 @Component({
   selector: 'app-video',
   template: `<div class="player-wrapper">
-      <div id={{videoId}} class="react-player embed-responsive embed-responsive-16by9">
+      <div id={{videoId}} #videoElement class="react-player embed-responsive embed-responsive-16by9">
       </div>
     </div>`
 })
-export class VideoComponent implements OnInit, OnChanges  {
+export class VideoComponent implements OnInit, OnChanges, AfterViewInit   {
   private _reactPlayer: any;
 
   @Input() videoId: string;
@@ -26,6 +27,8 @@ export class VideoComponent implements OnInit, OnChanges  {
   @Output() videoPlayEvent = new EventEmitter();
   @Output() videoPauseEvent = new EventEmitter();
 
+  @ViewChild('videoElement') videoElement: ElementRef;
+
   constructor() {}
 
   ngOnInit() {
@@ -40,7 +43,8 @@ export class VideoComponent implements OnInit, OnChanges  {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        const container = document.getElementById(this.videoId);
+
+        const container = this.videoElement.nativeElement;
         if (!container) {
             return;
         }
@@ -61,9 +65,8 @@ export class VideoComponent implements OnInit, OnChanges  {
         if (changes.videoUrl) {
             const inputvideoUrl: SimpleChange = changes.videoUrl;
             this._videoUrl = inputvideoUrl.currentValue;
-
-            const url = this.videoUrl;
             this._videoPlay = true;
+            const url = this._videoUrl;
             RenderReactPlayer(container,
                 Object.assign(videoSettings,
                     {
@@ -113,7 +116,11 @@ export class VideoComponent implements OnInit, OnChanges  {
             that._videoPlay = false;
             that.videoPauseEvent.emit(true);
         }
-
     }
+
+    ngAfterViewInit() {
+
+
+     }
   }
 

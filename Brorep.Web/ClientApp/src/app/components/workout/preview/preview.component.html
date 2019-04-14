@@ -1,10 +1,15 @@
+<button type="button" class="btn btn-primary" (click)="onGoBackClick()">Go back</button>
+
 <app-video 
     videoId="workout-preview-video"
-    videoUrl="{{videoUrl}}"
-    videoPlay="true"
+    [videoUrl]="videoUrl"
+    [videoPlay]="videoShouldPlay"
+    [setSeekerLocation]="setSeekerLocation"
     (errorEvent)="onVideoError($event)" 
     (progressEvent)="onVideoProgress($event)"
     (readyEvent)="onVideoReady($event)"
     (videoPlayEvent)="onVideoPlay($event)"
     (videoPauseEvent)="onVideoPause($event)">
 </app-video>
+
+{{currentRepNumber}}

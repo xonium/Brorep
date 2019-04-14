@@ -1,50 +1,24 @@
 <h1>workout</h1>
 
 <div class="row">
-    <div class="col-md-4">
-        <form [formGroup]="loadVideoForm" (ngSubmit)="onLoadVideoFormSubmit()">
-            <div class="form-group">
-                <label for="videoUrl">Load video from url</label>
-                <input type="text" class="form-control" name="videoUrl" id="videoUrl" placeholder="videoUrl" formControlName="videoUrl">
-            </div>
-            <button type="submit" class="btn btn-primary">Load video</button>
-        </form>
-    </div>
-    <div class="col-md-4">
-        <app-video 
-            videoId="workout-component-video"
-            [videoUrl]="loadThisVideo"
-            [videoPlay]="videoShouldPlay"
-            [setSeekerLocation]="setSeekerLocation"
-            (errorEvent)="onVideoError($event)" 
-            (progressEvent)="onVideoProgress($event)"
-            (readyEvent)="onVideoReady($event)"
-            (videoPlayEvent)="onVideoPlay($event)"
-            (videoPauseEvent)="onVideoPause($event)">
-        </app-video>
-
-        <div class="video-controls" *ngIf="videoReady">
-            <input type="range" class="video-seeker" [value]="seekerLocation" (click)="onSetSeekerLocation($event)" step="any" min="0" max="1">
-
-            <div class="recording-bar">
-                <div class="recorded-rep" *ngFor="let rep of this.recordedReps" 
-                [ngStyle]="{'left': rep.startTime + '%', 'width': rep.length + '%' }"></div>
-            </div>
-
-            <ng-container *ngIf="isVideoPlaying; then videoplayingTemplate; else videoPausedTemplate"></ng-container>
-
-            <ng-template #videoplayingTemplate>
-                <button type="button" class="btn btn-primary" (click)="onVideoPauseClick()">Pause</button>
-                <button type="button" class="btn btn-primary" (click)="onVideoRecordClick()">{{isRecording ? 'recording' : 'record'}}</button>
-                <button type="button" class="btn btn-primary" (click)="onVideoRecordClick()" *ngIf="this.recordedReps.length > 0">Preview</button>
-            </ng-template>
-            <ng-template #videoPausedTemplate>
-                <button type="button" class="btn btn-primary" (click)="onVideoPlayClick()">Play</button>
-                <button type="button" class="btn btn-primary" (click)="onVideoRecordClick()" *ngIf="this.recordedReps.length > 0">Preview</button>
-            </ng-template>
-        </div>
-    </div>
-    <div class="col-md-4" *ngIf="this.recordedReps.length > 0">
-        <app-workout-preview [recordedReps]="this.recordedReps" [videoUrl]="loadThisVideo"></app-workout-preview>
+    <div class="col-md-8">
+        {{step}}
+        <app-loadvideo 
+            *ngIf="step === 0" 
+            (videoSelected)="onVideoSelected($event)">
+        </app-loadvideo>
+        <app-videoedit
+            *ngIf="step === 1"
+            [recordedReps]="this.reps"
+            [videoUrl]="videoUrl"
+            (goBack)="onGoBack()"
+            (gotoPreview)="gotoPreview($event)">
+        </app-videoedit>
+        <app-workout-preview 
+            *ngIf="step === 2"            
+            [recordedReps]="this.reps"
+            [videoUrl]="videoUrl"
+            (goBack)="onGoBack()">
+        </app-workout-preview>
     </div>
 </div>

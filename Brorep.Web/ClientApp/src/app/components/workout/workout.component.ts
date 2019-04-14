@@ -9,87 +9,32 @@ import { RecordedRep } from 'src/app/models/recordedrep.models';
 })
 export class WorkoutComponent implements OnInit {
 
-    loadThisVideo: string;
-    loadVideoForm: FormGroup;
-    seekerLocation: number;
-    setSeekerLocation: number;
-    videoReady: boolean;
-    isVideoPlaying: boolean;
-    videoShouldPlay: boolean;
-    isRecording: boolean;
-    startRecord: number;
-    stopRecord: number;
-    recordedReps: RecordedRep[];
+    step: number;
+    videoUrl: string;
+    reps: RecordedRep[];
 
-    constructor(private fb: FormBuilder) {
-        this.loadVideoForm = this.fb.group({
-            videoUrl: new FormControl('')
-          });
+    constructor() {}
 
-          this.recordedReps = [];
-          this.isRecording = false;
+    ngOnInit(): void {
+        this.step = 0;
+        this.reps = [];
     }
 
-    ngOnInit(): void { }
-
-    onLoadVideoFormSubmit() {
-        this.loadThisVideo = this.loadVideoForm.get('videoUrl').value;
+    onVideoSelected(videoUrl) {
+        this.step = 1;
+        this.videoUrl = videoUrl;
     }
 
-    onVideoPauseClick() {
-        this.videoShouldPlay = false;
-    }
-
-    onVideoPlayClick() {
-        this.videoShouldPlay = true;
-    }
-
-    onVideoReady(event) {
-        this.videoReady = true;
-    }
-
-    onVideoError(error) {
-        console.log(error);
-    }
-
-    onSetSeekerLocation(event) {
-        if (this.isRecording) { return; }
-
-        const target = event.target || event.srcElement || event.currentTarget;
-        const value = target.value;
-        this.setSeekerLocation = value;
-    }
-
-    onVideoProgress(progress) {
-        this.seekerLocation = progress.played;
-    }
-
-    onVideoPlay(isPlaying) {
-        this.isVideoPlaying = isPlaying;
-        this.videoShouldPlay = isPlaying;
-    }
-
-    onVideoPause(isPausing) {
-        this.isVideoPlaying = !isPausing;
-        this.videoShouldPlay = !isPausing;
-    }
-
-    onVideoRecordClick() {
-        this.isRecording = !this.isRecording;
-
-        if (this.isRecording) {
-            this.startRecord = this.seekerLocation;
-        } else {
-            this.stopRecord = this.seekerLocation;
-
-            this.recordedReps.push(
-            {
-                startTime: this.startRecord * 100,
-                stopTime: this.stopRecord * 100,
-                length: (this.stopRecord - this.startRecord) * 100
-            });
-
-            console.log(this.recordedReps);
+    onGoBack() {
+        this.step -= 1;
+        if (this.step === 0) {
+            this.reps = [];
+            this.videoUrl = null;
         }
+    }
+
+    gotoPreview(event) {
+        this.reps = event.reps;
+        this.step += 1;
     }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, SimpleChange } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, SimpleChange, Output, EventEmitter } from '@angular/core';
 import { RecordedRep } from 'src/app/models/recordedrep.models';
 
 @Component({
@@ -7,10 +7,17 @@ import { RecordedRep } from 'src/app/models/recordedrep.models';
     styleUrls: ['./preview.component.scss']
 })
 export class PreviewComponent implements OnInit, OnChanges {
+    @Output() goBack = new EventEmitter();
+
     @Input() recordedReps: RecordedRep[];
     private _recordedReps: RecordedRep[];
 
     @Input() videoUrl: string;
+
+    private _currentRep: RecordedRep;
+    setSeekerLocation: number;
+    videoShouldPlay: boolean;
+    currentRepNumber: number;
 
     constructor() { }
 
@@ -21,8 +28,17 @@ export class PreviewComponent implements OnInit, OnChanges {
             const recordedReps: SimpleChange = changes.recordedReps;
             this._recordedReps = recordedReps.currentValue;
 
-            console.log('jeessus');
+            if (this._recordedReps.length > 0) {
+                this._currentRep = this._recordedReps[0];
+                this.setSeekerLocation = this._currentRep.startTime;
+                this.videoShouldPlay = true;
+                this.currentRepNumber = 1;
+            }
         }
+    }
+
+    onGoBackClick() {
+        this.goBack.emit();
     }
 
     onVideoReady(event) {
@@ -34,18 +50,29 @@ export class PreviewComponent implements OnInit, OnChanges {
     }
 
     onSetSeekerLocation(event) {
-        console.log('ready');
+        console.log('set seeker location');
     }
 
     onVideoProgress(progress) {
-        console.log('ready');
+        // playedSeconds: 17.313998972697505, played: 0.019843647284933548, loadedSeconds: 0, loaded: 0
+        console.log(progress);
+        if (progress.played >= this._currentRep.stopTime) {
+            // move to next rep
+            if (this._recordedReps.length > this.currentRepNumber) {
+                this._currentRep = this._recordedReps[this.currentRepNumber];
+                this.setSeekerLocation = this._currentRep.startTime;
+                this.videoShouldPlay = true;
+                this.currentRepNumber += 1;
+            } else {
+                this.videoShouldPlay = false;
+            }
+        }
     }
 
     onVideoPlay(isPlaying) {
-        console.log('ready');
     }
 
     onVideoPause(isPausing) {
-        console.log('ready');
     }
+
 }
