@@ -42,22 +42,16 @@ export class PreviewComponent implements OnInit, OnChanges {
     }
 
     onVideoReady(event) {
-        console.log('ready');
     }
 
     onVideoError(error) {
-        console.log('ready');
     }
 
     onSetSeekerLocation(event) {
-        console.log('set seeker location');
     }
 
     onVideoProgress(progress) {
-        // playedSeconds: 17.313998972697505, played: 0.019843647284933548, loadedSeconds: 0, loaded: 0
-        console.log(progress);
         if (progress.played >= this._currentRep.stopTime) {
-            // move to next rep
             if (this._recordedReps.length > this.currentRepNumber) {
                 this._currentRep = this._recordedReps[this.currentRepNumber];
                 this.setSeekerLocation = this._currentRep.startTime;
@@ -75,4 +69,16 @@ export class PreviewComponent implements OnInit, OnChanges {
     onVideoPause(isPausing) {
     }
 
+    onSubmitClick() {
+        console.log({reps: this._recordedReps, video: this.videoUrl});
+    }
+
+    onReplayClick() {
+        if (this._recordedReps.length > 0) {
+            this._currentRep = this._recordedReps[0];
+            this.setSeekerLocation = this._currentRep.startTime;
+            this.videoShouldPlay = true;
+            this.currentRepNumber = 1;
+        }
+    }
 }
