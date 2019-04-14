@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Brorep.Domain.Entities;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,10 +17,10 @@ namespace Brorep.Application.Identity.Commands
     public class CreateIdentityCommandHandler : IRequestHandler<CreateIdentityCommand, Unit>
     {
         private readonly IMediator _mediator;
-        private UserManager<IdentityUser> _userManager;
+        private UserManager<ApplicationUser> _userManager;
 
         public CreateIdentityCommandHandler(
-            UserManager<IdentityUser> userManager,
+            UserManager<ApplicationUser> userManager,
             IMediator mediator)
         {
             _mediator = mediator;
@@ -32,7 +33,7 @@ namespace Brorep.Application.Identity.Commands
             var email = await _userManager.FindByEmailAsync(request.Email);
             if (user == null && email == null)
             {
-                user = new IdentityUser
+                user = new ApplicationUser
                 {
                     UserName = request.Username,
                     Email = request.Email

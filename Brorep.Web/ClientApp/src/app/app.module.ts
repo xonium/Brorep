@@ -14,7 +14,7 @@ import { UserComponent } from './components/user/user.component';
 import { WorkoutComponent } from './components/workout/workout.component';
 import { VideoComponent } from './components/video/video.component';
 
-import { IdentityClient } from './brorep-api';
+import { IdentityClient, SeasonClient } from './brorep-api';
 import { JwtService } from './services/jwt.service';
 import { UserService } from './services/user.service';
 
@@ -23,6 +23,8 @@ import { AddAuthenticationInterceptor } from './interceptors/addauthenticationhe
 import { PreviewComponent } from './components/workout/preview/preview.component';
 import { LoadVideoComponent } from './components/workout/loadvideo/loadvideo.component';
 import { VideoEditComponent } from './components/workout/videoedit/videoedit.component';
+import { WorkoutListComponent } from './components/workout/list/workoutlist.component';
+import { UrlPrettifierPipe } from './pipes/urlprettifier.pipe';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,9 @@ import { VideoEditComponent } from './components/workout/videoedit/videoedit.com
     VideoComponent,
     PreviewComponent,
     LoadVideoComponent,
-    VideoEditComponent
+    VideoEditComponent,
+    WorkoutListComponent,
+    UrlPrettifierPipe
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -48,10 +52,11 @@ import { VideoEditComponent } from './components/workout/videoedit/videoedit.com
       { path: 'judge', component: JudgeComponent },
       { path: 'leaderboard', component: LeaderBoardComponent },
       { path: 'user', component: UserComponent },
-      { path: 'workout', component: WorkoutComponent },
+      { path: 'workouts', component: WorkoutComponent },
+      { path: 'workout/:seasonname/:workoutname', component: UserComponent}
     ])
   ],
-  providers: [IdentityClient, JwtService, UserService, {
+  providers: [IdentityClient, JwtService, UserService, SeasonClient, {
     provide: HTTP_INTERCEPTORS,
     useClass: AddAuthenticationInterceptor,
     multi: true

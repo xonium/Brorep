@@ -208,6 +208,77 @@ export class IdentityClient implements IIdentityClient {
     }
 }
 
+export interface ISeasonClient {
+    getWorkoutsForSeason(): Observable<SeasonWorkoutsDto | null>;
+}
+
+@Injectable()
+export class SeasonClient implements ISeasonClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    getWorkoutsForSeason(): Observable<SeasonWorkoutsDto | null> {
+        let url_ = this.baseUrl + "/api/Season/current";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetWorkoutsForSeason(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetWorkoutsForSeason(<any>response_);
+                } catch (e) {
+                    return <Observable<SeasonWorkoutsDto | null>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<SeasonWorkoutsDto | null>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetWorkoutsForSeason(response: HttpResponseBase): Observable<SeasonWorkoutsDto | null> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 ? SeasonWorkoutsDto.fromJS(resultData200) : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = resultData500 ? ProblemDetails.fromJS(resultData500) : <any>null;
+            return throwException("A server error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<SeasonWorkoutsDto | null>(<any>null);
+    }
+}
+
 export class ProblemDetails implements IProblemDetails {
     type?: string | undefined;
     title?: string | undefined;
@@ -471,6 +542,122 @@ export class UserDto implements IUserDto {
 export interface IUserDto {
     email?: string | undefined;
     user?: string | undefined;
+}
+
+export class SeasonWorkoutsDto implements ISeasonWorkoutsDto {
+    seasonId?: number;
+    name?: string | undefined;
+    start?: Date;
+    end?: Date;
+    workouts?: WorkoutDto[] | undefined;
+
+    constructor(data?: ISeasonWorkoutsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.seasonId = data["seasonId"];
+            this.name = data["name"];
+            this.start = data["start"] ? new Date(data["start"].toString()) : <any>undefined;
+            this.end = data["end"] ? new Date(data["end"].toString()) : <any>undefined;
+            if (data["workouts"] && data["workouts"].constructor === Array) {
+                this.workouts = [] as any;
+                for (let item of data["workouts"])
+                    this.workouts!.push(WorkoutDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): SeasonWorkoutsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SeasonWorkoutsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["seasonId"] = this.seasonId;
+        data["name"] = this.name;
+        data["start"] = this.start ? this.start.toISOString() : <any>undefined;
+        data["end"] = this.end ? this.end.toISOString() : <any>undefined;
+        if (this.workouts && this.workouts.constructor === Array) {
+            data["workouts"] = [];
+            for (let item of this.workouts)
+                data["workouts"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface ISeasonWorkoutsDto {
+    seasonId?: number;
+    name?: string | undefined;
+    start?: Date;
+    end?: Date;
+    workouts?: WorkoutDto[] | undefined;
+}
+
+export class WorkoutDto implements IWorkoutDto {
+    workoutId?: string;
+    name?: string | undefined;
+    description?: string | undefined;
+    imageUrl?: string | undefined;
+    videoUrl?: string | undefined;
+    length?: number;
+
+    constructor(data?: IWorkoutDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.workoutId = data["workoutId"];
+            this.name = data["name"];
+            this.description = data["description"];
+            this.imageUrl = data["imageUrl"];
+            this.videoUrl = data["videoUrl"];
+            this.length = data["length"];
+        }
+    }
+
+    static fromJS(data: any): WorkoutDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new WorkoutDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["workoutId"] = this.workoutId;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["imageUrl"] = this.imageUrl;
+        data["videoUrl"] = this.videoUrl;
+        data["length"] = this.length;
+        return data; 
+    }
+}
+
+export interface IWorkoutDto {
+    workoutId?: string;
+    name?: string | undefined;
+    description?: string | undefined;
+    imageUrl?: string | undefined;
+    videoUrl?: string | undefined;
+    length?: number;
 }
 
 export class SwaggerException extends Error {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { UserDto } from '../../brorep-api';
 
@@ -7,7 +7,7 @@ import { UserDto } from '../../brorep-api';
   templateUrl: './nav-menu.component.html',
   styleUrls: ['./nav-menu.component.css']
 })
-export class NavMenuComponent {
+export class NavMenuComponent implements OnInit {
   isExpanded = false;
   isAuth: boolean;
   user: UserDto;

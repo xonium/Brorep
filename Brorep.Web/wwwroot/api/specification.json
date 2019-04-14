@@ -152,6 +152,46 @@
           }
         }
       }
+    },
+    "/api/Season/current": {
+      "get": {
+        "tags": [
+          "Season"
+        ],
+        "operationId": "Season_GetWorkoutsForSeason",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true,
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/SeasonWorkoutsDto"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true,
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ProblemDetails"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -271,6 +311,65 @@
           "user": {
             "type": "string",
             "nullable": true
+          }
+        }
+      },
+      "SeasonWorkoutsDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "seasonId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "start": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "workouts": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/WorkoutDto"
+            }
+          }
+        }
+      },
+      "WorkoutDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "workoutId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "imageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "videoUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "length": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       }

@@ -1,0 +1,12 @@
+<ng-container *ngIf="isLoading; else loaded">
+    loading
+</ng-container>
+<ng-template #loaded>
+    <h1>{{seasonWorkouts.name}}</h1>
+    <p>{{seasonWorkouts.start}} - {{seasonWorkouts.end}}</p>
+    <div *ngFor="let workout of seasonWorkouts.workouts">
+        
+        <a [routerLink]="[ '/workout', seasonWorkouts.name | urlPrettifier, workout.name | urlPrettifier ]">{{workout.name}}</a>
+    </div>
+</ng-template>
+

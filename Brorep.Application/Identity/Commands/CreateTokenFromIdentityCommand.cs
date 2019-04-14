@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Brorep.Application.Settings;
 using Brorep.Application.Identity.Models;
+using Brorep.Domain.Entities;
 
 namespace Brorep.Application.Identity.Commands
 {
@@ -23,12 +24,12 @@ namespace Brorep.Application.Identity.Commands
     {
         private readonly IMediator _mediator;
         private readonly ISettings _settings;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
         public CreateTokenFromIdentityCommandHandler(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
             IMediator mediator,
             ISettings settings)
         {

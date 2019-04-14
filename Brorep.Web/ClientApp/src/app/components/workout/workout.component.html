@@ -1,24 +1,3 @@
-<h1>workout</h1>
+<h1>workouts</h1>
 
-<div class="row">
-    <div class="col-md-8">
-        {{step}}
-        <app-loadvideo 
-            *ngIf="step === 0" 
-            (videoSelected)="onVideoSelected($event)">
-        </app-loadvideo>
-        <app-videoedit
-            *ngIf="step === 1"
-            [recordedReps]="this.reps"
-            [videoUrl]="videoUrl"
-            (goBack)="onGoBack()"
-            (gotoPreview)="gotoPreview($event)">
-        </app-videoedit>
-        <app-workout-preview 
-            *ngIf="step === 2"            
-            [recordedReps]="this.reps"
-            [videoUrl]="videoUrl"
-            (goBack)="onGoBack()">
-        </app-workout-preview>
-    </div>
-</div>
+<app-workoutlist></app-workoutlist>

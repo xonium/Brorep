@@ -1,4 +1,6 @@
-﻿using Brorep.Domain;
+﻿using Brorep.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,39 +8,65 @@ namespace Brorep.Persistence
 {
     public class BrorepInitializer
     {
-        
-        private readonly Dictionary<int, User> Users = new Dictionary<int, User>();
 
-        public static void Initialize(BrorepDbContext context)
+        private static UserManager<ApplicationUser> _userManager;
+
+        private readonly List<ApplicationUser> Users = new List<ApplicationUser>();
+        private readonly List<Season> Seasons = new List<Season>();
+
+        public static void Initialize(BrorepDbContext context, UserManager<ApplicationUser> userManager)
         {
             var initializer = new BrorepInitializer();
-            initializer.SeedEverything(context);
+            _userManager = userManager;
+
+            initializer.SeedEverything(context);            
         }
 
         public void SeedEverything(BrorepDbContext context)
         {
             context.Database.EnsureCreated();
             
+            if (context.Users.Any())
+            {
+                return; // Db has been seeded
+            }
 
+            SeedUsers(context);
+            SeedSeasons(context);
+        }
 
-            //if (context.Users.Any())
-            //{
-            //    return; // Db has been seeded
-            //}
+        private void SeedSeasons(BrorepDbContext context)
+        {
+            Seasons.Add(new Season {Name="Season zero", Start = DateTime.UtcNow.AddDays(-90), End = DateTime.UtcNow.AddDays(-1),
+                Workouts = new List<Workout> { new Workout { Name = "Workout 1" } }
+            });
+            Seasons.Add(new Season { Name = "Season one", Start = DateTime.UtcNow, End = DateTime.UtcNow.AddDays(90),
+                Workouts = new List<Workout> { new Workout { Name = "Workout 2" } }
+            });
+            Seasons.Add(new Season { Name = "Season two", Start = DateTime.UtcNow.AddDays(90), End = DateTime.UtcNow.AddDays(180),
+                Workouts = new List<Workout> { new Workout { Name = "Workout 3" } }
+            });
 
-            //SeedUsers(context);
+            context.Seasons.AddRange(Seasons);
+            context.SaveChanges();
         }
 
         private void SeedUsers(BrorepDbContext context)
         {
-            /*Users.Add(1, new User { Email = "mail@temp.se", Firstname = "Charlotte", Lastname = "Purchasingson" });
+            Users.Add(new ApplicationUser { UserName = "HerrNilsson", PhoneNumber = "123" });
+            Users.Add(new ApplicationUser { UserName = "Fluff", PhoneNumber = "123" });
+            Users.Add(new ApplicationUser { UserName = "BoByggare", PhoneNumber = "123"  });
 
-            foreach (var user in Users.Values)
+            foreach (var user in Users)
             {
-                context.Users.Add(user);
+                var result = _userManager.CreateAsync(user, user.UserName + user.PhoneNumber + "!").Result;
+                if(result.Succeeded)
+                {
+
+                }
             }
 
-            context.SaveChanges();*/
+            context.SaveChanges();
         }
     }
 }

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Brorep.Common\Brorep.Common.csproj" />
     <ProjectReference Include="..\Brorep.Domain\Brorep.Domain.csproj" />
     <ProjectReference Include="..\Brorep.Persistence\Brorep.Persistence.csproj" />
   </ItemGroup>

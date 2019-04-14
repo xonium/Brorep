@@ -28,6 +28,9 @@ using NSwag.SwaggerGeneration.Processors.Security;
 using NSwag;
 using NSwag.AspNetCore;
 using NSwag.SwaggerGeneration.WebApi;
+using Brorep.Domain.Entities;
+using Brorep.Common;
+using Brorep.Infrastructure;
 
 namespace Brorep.WebUI
 {
@@ -46,14 +49,8 @@ namespace Brorep.WebUI
             // Add AutoMapper
             services.AddAutoMapper(new Assembly[] { typeof(AutoMapperProfile).GetTypeInfo().Assembly });
             
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
-
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
+            services.AddTransient<IDateTime, MachineDateTime>();
             services.AddMediatR(typeof(CreateIdentityCommand).GetTypeInfo().Assembly);
 
             // In production, the Angular files will be served from this directory
@@ -99,8 +96,9 @@ namespace Brorep.WebUI
                 });
             });
 
-            services.AddDefaultIdentity<IdentityUser>()
-                .AddEntityFrameworkStores<BrorepDbContext>();
+            services.AddDefaultIdentity<ApplicationUser>()
+                .AddEntityFrameworkStores<BrorepDbContext>()
+                .AddDefaultTokenProviders();
 
             // Customise default API behavour
             services.Configure<ApiBehaviorOptions>(options =>
@@ -147,7 +145,9 @@ namespace Brorep.WebUI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, 
+            IHostingEnvironment env, 
+            UserManager<ApplicationUser> userManager)
         {
             if (env.IsDevelopment())
             {

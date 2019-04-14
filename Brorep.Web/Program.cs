@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Brorep.Domain.Entities;
 using Brorep.Persistence;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,7 +28,8 @@ namespace Brorep.WebUI
                     var context = scope.ServiceProvider.GetService<BrorepDbContext>();
                     context.Database.Migrate();
 
-                    BrorepInitializer.Initialize(context);
+                    var userManager = scope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
+                    BrorepInitializer.Initialize(context, userManager);
                 }
                 catch (Exception ex)
                 {

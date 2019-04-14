@@ -1,4 +1,5 @@
 ﻿using Brorep.Application.Identity.Models;
+using Brorep.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -20,10 +21,10 @@ namespace Brorep.Application.Identity.Queries
 
     public class GetCurrentIdentityQueryHandler : IRequestHandler<GetCurrentIdentityQuery, UserDto>
     {
-        private UserManager<IdentityUser> _userManager;
+        private UserManager<ApplicationUser> _userManager;
 
         public GetCurrentIdentityQueryHandler(
-            UserManager<IdentityUser> userManager)
+            UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
         }
