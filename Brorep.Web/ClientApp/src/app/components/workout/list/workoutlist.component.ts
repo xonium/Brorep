@@ -6,7 +6,7 @@ import { SeasonClient, SeasonWorkoutsDto } from 'src/app/brorep-api';
     templateUrl: './workoutlist.component.html',
     styleUrls: ['./workoutlist.component.scss']
 })
-export class WorkoutListComponent implements OnInit {    
+export class WorkoutListComponent implements OnInit {
     constructor(private seasonClient: SeasonClient) { }
 
     public isLoading: boolean;
