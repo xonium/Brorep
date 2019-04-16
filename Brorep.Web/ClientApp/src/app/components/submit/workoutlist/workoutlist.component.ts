@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { SeasonClient, SeasonWorkoutsDto } from 'src/app/brorep-api';
 
 @Component({
@@ -8,6 +8,8 @@ import { SeasonClient, SeasonWorkoutsDto } from 'src/app/brorep-api';
 })
 export class WorkoutListComponent implements OnInit {
     constructor(private seasonClient: SeasonClient) { }
+
+    @Output() workoutSelected = new EventEmitter();
 
     public isLoading: boolean;
     public seasonWorkouts: SeasonWorkoutsDto;
@@ -21,5 +23,9 @@ export class WorkoutListComponent implements OnInit {
             },
             error => {}
         );
+    }
+
+    onWorkoutClick(workoutId) {
+        this.workoutSelected.emit(workoutId);
     }
 }

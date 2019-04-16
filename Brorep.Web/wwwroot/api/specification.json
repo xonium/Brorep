@@ -439,6 +439,10 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "workoutId": {
+            "type": "string",
+            "format": "guid"
+          },
           "name": {
             "type": "string",
             "nullable": true

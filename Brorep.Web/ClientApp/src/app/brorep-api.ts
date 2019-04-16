@@ -696,6 +696,7 @@ export interface ISeasonWorkoutsDto {
 }
 
 export class WorkoutDto implements IWorkoutDto {
+    workoutId?: string;
     name?: string | undefined;
     description?: string | undefined;
     imageUrl?: string | undefined;
@@ -711,6 +712,7 @@ export class WorkoutDto implements IWorkoutDto {
 
     init(data?: any) {
         if (data) {
+            this.workoutId = data["workoutId"];
             this.name = data["name"];
             this.description = data["description"];
             this.imageUrl = data["imageUrl"];
@@ -726,6 +728,7 @@ export class WorkoutDto implements IWorkoutDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["workoutId"] = this.workoutId;
         data["name"] = this.name;
         data["description"] = this.description;
         data["imageUrl"] = this.imageUrl;
@@ -734,6 +737,7 @@ export class WorkoutDto implements IWorkoutDto {
 }
 
 export interface IWorkoutDto {
+    workoutId?: string;
     name?: string | undefined;
     description?: string | undefined;
     imageUrl?: string | undefined;

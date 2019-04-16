@@ -8,6 +8,7 @@ import { FormControl, FormBuilder, FormGroup } from '@angular/forms';
 })
 export class LoadVideoComponent implements OnInit {
     @Output() videoSelected = new EventEmitter();
+    @Output() goBack = new EventEmitter();
 
     loadVideoForm: FormGroup;
     videoUrl: string;
@@ -18,6 +19,10 @@ export class LoadVideoComponent implements OnInit {
     }
 
     ngOnInit(): void { }
+
+    onGoBackClick() {
+        this.goBack.emit();
+    }
 
     onLoadVideoFormSubmit() {
         this.videoUrl = this.loadVideoForm.get('videoUrl').value;

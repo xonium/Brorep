@@ -9,6 +9,7 @@ import { RecordedRep } from 'src/app/models/recordedrep.models';
 export class SubmitComponent implements OnInit {
     step: number;
     videoUrl: string;
+    workoutGuid: string;
     reps: RecordedRep[];
 
     constructor() {}
@@ -18,17 +19,22 @@ export class SubmitComponent implements OnInit {
         this.reps = [];
     }
 
-    onVideoSelected(videoUrl) {
-        this.step = 1;
-        this.videoUrl = videoUrl;
-    }
-
     onGoBack() {
         this.step -= 1;
         if (this.step === 0) {
             this.reps = [];
             this.videoUrl = null;
         }
+    }
+
+    onWorkoutSelected(workoutGuid) {
+        this.step += 1;
+        this.workoutGuid = workoutGuid;
+    }
+
+    onVideoSelected(videoUrl) {
+        this.step += 1;
+        this.videoUrl = videoUrl;
     }
 
     gotoPreview(event) {

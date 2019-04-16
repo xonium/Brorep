@@ -11,7 +11,6 @@ import { HomeComponent } from './components/home/home.component';
 import { JudgeComponent } from './components/judge/judge.component';
 import { LeaderBoardComponent } from './components/leaderboard/leaderboard.component';
 import { UserComponent } from './components/user/user.component';
-import { WorkoutComponent } from './components/workout/workout.component';
 import { VideoComponent } from './components/video/video.component';
 
 import { IdentityClient, SeasonClient } from './brorep-api';
@@ -20,11 +19,12 @@ import { UserService } from './services/user.service';
 
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AddAuthenticationInterceptor } from './interceptors/addauthenticationheader.interceptor';
-import { PreviewComponent } from './components/workout/preview/preview.component';
-import { LoadVideoComponent } from './components/workout/loadvideo/loadvideo.component';
-import { VideoEditComponent } from './components/workout/videoedit/videoedit.component';
-import { WorkoutListComponent } from './components/workout/list/workoutlist.component';
+import { PreviewComponent } from './components/submit/preview/preview.component';
+import { LoadVideoComponent } from './components/submit/loadvideo/loadvideo.component';
+import { VideoEditComponent } from './components/submit/videoedit/videoedit.component';
+import { WorkoutListComponent } from './components/submit/workoutlist/workoutlist.component';
 import { UrlPrettifierPipe } from './pipes/urlprettifier.pipe';
+import { SubmitComponent } from './components/submit/submit.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +34,7 @@ import { UrlPrettifierPipe } from './pipes/urlprettifier.pipe';
     JudgeComponent,
     LeaderBoardComponent,
     UserComponent,
-    WorkoutComponent,
+    SubmitComponent,
     VideoComponent,
     PreviewComponent,
     LoadVideoComponent,
@@ -52,7 +52,7 @@ import { UrlPrettifierPipe } from './pipes/urlprettifier.pipe';
       { path: 'judge', component: JudgeComponent },
       { path: 'leaderboard', component: LeaderBoardComponent },
       { path: 'user', component: UserComponent },
-      { path: 'workouts', component: WorkoutComponent },
+      { path: 'submit', component: SubmitComponent },
       { path: 'workout/:seasonname/:workoutname', component: UserComponent}
     ])
   ],
