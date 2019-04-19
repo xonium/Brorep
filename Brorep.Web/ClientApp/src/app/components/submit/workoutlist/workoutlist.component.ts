@@ -25,7 +25,7 @@ export class WorkoutListComponent implements OnInit {
         );
     }
 
-    onWorkoutClick(workoutId) {
-        this.workoutSelected.emit(workoutId);
+    onWorkoutClick(workout) {
+        this.workoutSelected.emit(workout);
     }
 }

@@ -281,6 +281,7 @@ export class SeasonClient implements ISeasonClient {
 
 export interface IWorkoutClient {
     getWorkout(seasonName: string | null, workoutName: string | null): Observable<WorkoutDto | null>;
+    submit(command: SubmitWorkoutCommand): Observable<void>;
 }
 
 @Injectable()
@@ -367,6 +368,68 @@ export class WorkoutClient implements IWorkoutClient {
             }));
         }
         return _observableOf<WorkoutDto | null>(<any>null);
+    }
+
+    submit(command: SubmitWorkoutCommand): Observable<void> {
+        let url_ = this.baseUrl + "/api/Workout/submit";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSubmit(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSubmit(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSubmit(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = resultData400 ? ValidationProblemDetails.fromJS(resultData400) : <any>null;
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 500) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result500: any = null;
+            let resultData500 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result500 = resultData500 ? ProblemDetails.fromJS(resultData500) : <any>null;
+            return throwException("A server error occurred.", status, _responseText, _headers, result500);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
     }
 }
 
@@ -741,6 +804,102 @@ export interface IWorkoutDto {
     name?: string | undefined;
     description?: string | undefined;
     imageUrl?: string | undefined;
+}
+
+export class SubmitWorkoutCommand implements ISubmitWorkoutCommand {
+    username?: string | undefined;
+    workoutId?: string;
+    reps?: RepDto[] | undefined;
+    videoUrl?: string | undefined;
+
+    constructor(data?: ISubmitWorkoutCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.username = data["username"];
+            this.workoutId = data["workoutId"];
+            if (data["reps"] && data["reps"].constructor === Array) {
+                this.reps = [] as any;
+                for (let item of data["reps"])
+                    this.reps!.push(RepDto.fromJS(item));
+            }
+            this.videoUrl = data["videoUrl"];
+        }
+    }
+
+    static fromJS(data: any): SubmitWorkoutCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new SubmitWorkoutCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["username"] = this.username;
+        data["workoutId"] = this.workoutId;
+        if (this.reps && this.reps.constructor === Array) {
+            data["reps"] = [];
+            for (let item of this.reps)
+                data["reps"].push(item.toJSON());
+        }
+        data["videoUrl"] = this.videoUrl;
+        return data; 
+    }
+}
+
+export interface ISubmitWorkoutCommand {
+    username?: string | undefined;
+    workoutId?: string;
+    reps?: RepDto[] | undefined;
+    videoUrl?: string | undefined;
+}
+
+export class RepDto implements IRepDto {
+    startTime?: number;
+    stopTime?: number;
+
+    constructor(data?: IRepDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.startTime = data["startTime"];
+            this.stopTime = data["stopTime"];
+        }
+    }
+
+    static fromJS(data: any): RepDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new RepDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["startTime"] = this.startTime;
+        data["stopTime"] = this.stopTime;
+        return data; 
+    }
+}
+
+export interface IRepDto {
+    startTime?: number;
+    stopTime?: number;
 }
 
 export class SwaggerException extends Error {

@@ -21,7 +21,8 @@
             *ngIf="step === 3"            
             [recordedReps]="this.reps"
             [videoUrl]="videoUrl"
-            (goBack)="onGoBack()">
+            (goBack)="onGoBack()"
+            (submit)="onSubmit($event)">
         </app-workout-preview>
     </div>
 </div>

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RecordedRep } from 'src/app/models/recordedrep.models';
+import { WorkoutDto, WorkoutClient, SubmitWorkoutCommand, RepDto } from 'src/app/brorep-api';
+import { UserService } from '../../services/user.service';
 
 @Component({
     selector: 'app-submit',
@@ -9,10 +11,10 @@ import { RecordedRep } from 'src/app/models/recordedrep.models';
 export class SubmitComponent implements OnInit {
     step: number;
     videoUrl: string;
-    workoutGuid: string;
+    workout: WorkoutDto;
     reps: RecordedRep[];
 
-    constructor() {}
+    constructor(private workoutClient: WorkoutClient, private userService: UserService) {}
 
     ngOnInit(): void {
         this.step = 0;
@@ -27,9 +29,9 @@ export class SubmitComponent implements OnInit {
         }
     }
 
-    onWorkoutSelected(workoutGuid) {
+    onWorkoutSelected(workout) {
         this.step += 1;
-        this.workoutGuid = workoutGuid;
+        this.workout = workout;
     }
 
     onVideoSelected(videoUrl) {
@@ -40,5 +42,28 @@ export class SubmitComponent implements OnInit {
     gotoPreview(event) {
         this.reps = event.reps;
         this.step += 1;
+    }
+
+    onSubmit(event) {
+        const cmd = new SubmitWorkoutCommand(
+            {
+                reps: this.reps.map((x) => {
+                    const rep = new RepDto();
+                    rep.startTime = x.startTime;
+                    rep.stopTime = x.stopTime;
+                    return rep;
+                }),
+                videoUrl: this.videoUrl,
+                workoutId: this.workout.workoutId,
+                username: this.userService.getCurrentUser().user
+            });
+
+        this.workoutClient.submit(cmd).subscribe(
+        result => {
+            this.step += 1;
+          }, error => {
+            console.error(error);
+          }
+        );
     }
 }

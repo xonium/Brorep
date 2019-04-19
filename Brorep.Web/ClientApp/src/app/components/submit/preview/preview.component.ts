@@ -8,6 +8,7 @@ import { RecordedRep } from 'src/app/models/recordedrep.models';
 })
 export class PreviewComponent implements OnInit, OnChanges {
     @Output() goBack = new EventEmitter();
+    @Output() submit = new EventEmitter();
 
     @Input() recordedReps: RecordedRep[];
     private _recordedReps: RecordedRep[];
@@ -70,7 +71,7 @@ export class PreviewComponent implements OnInit, OnChanges {
     }
 
     onSubmitClick() {
-        console.log({reps: this._recordedReps, video: this.videoUrl});
+        this.submit.emit();
     }
 
     onReplayClick() {

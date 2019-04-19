@@ -22,7 +22,6 @@ namespace Brorep.Application.Identity.Commands
 
     public class CreateTokenFromIdentityCommandHandler : IRequestHandler<CreateTokenFromIdentityCommand, TokenDto>
     {
-        private readonly IMediator _mediator;
         private readonly ISettings _settings;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -30,10 +29,8 @@ namespace Brorep.Application.Identity.Commands
         public CreateTokenFromIdentityCommandHandler(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            IMediator mediator,
             ISettings settings)
         {
-            _mediator = mediator;
             _userManager = userManager;
             _signInManager = signInManager;
             _settings = settings;

@@ -13,7 +13,7 @@ import { LeaderBoardComponent } from './components/leaderboard/leaderboard.compo
 import { UserComponent } from './components/user/user.component';
 import { VideoComponent } from './components/video/video.component';
 
-import { IdentityClient, SeasonClient } from './brorep-api';
+import { IdentityClient, SeasonClient, WorkoutClient } from './brorep-api';
 import { JwtService } from './services/jwt.service';
 import { UserService } from './services/user.service';
 
@@ -56,7 +56,7 @@ import { SubmitComponent } from './components/submit/submit.component';
       { path: 'workout/:seasonname/:workoutname', component: UserComponent}
     ])
   ],
-  providers: [IdentityClient, JwtService, UserService, SeasonClient, {
+  providers: [IdentityClient, JwtService, UserService, SeasonClient, WorkoutClient, {
     provide: HTTP_INTERCEPTORS,
     useClass: AddAuthenticationInterceptor,
     multi: true

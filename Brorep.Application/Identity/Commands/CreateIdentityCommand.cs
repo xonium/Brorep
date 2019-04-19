@@ -16,14 +16,11 @@ namespace Brorep.Application.Identity.Commands
 
     public class CreateIdentityCommandHandler : IRequestHandler<CreateIdentityCommand, Unit>
     {
-        private readonly IMediator _mediator;
         private UserManager<ApplicationUser> _userManager;
 
         public CreateIdentityCommandHandler(
-            UserManager<ApplicationUser> userManager,
-            IMediator mediator)
+            UserManager<ApplicationUser> userManager)
         {
-            _mediator = mediator;
             _userManager = userManager;
         }
 
