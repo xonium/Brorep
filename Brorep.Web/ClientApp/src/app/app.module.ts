@@ -9,6 +9,8 @@ import { AppComponent } from './app.component';
 import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
 import { HomeComponent } from './components/home/home.component';
 import { JudgeComponent } from './components/judge/judge.component';
+import {JudgeTypeComponent} from './components/judge/judgetype/judgetype.component';
+
 import { LeaderBoardComponent } from './components/leaderboard/leaderboard.component';
 import { UserComponent } from './components/user/user.component';
 import { VideoComponent } from './components/video/video.component';
@@ -22,7 +24,7 @@ import { AddAuthenticationInterceptor } from './interceptors/addauthenticationhe
 import { PreviewComponent } from './components/submit/preview/preview.component';
 import { LoadVideoComponent } from './components/submit/loadvideo/loadvideo.component';
 import { VideoEditComponent } from './components/submit/videoedit/videoedit.component';
-import { WorkoutListComponent } from './components/submit/workoutlist/workoutlist.component';
+import { WorkoutListComponent } from './components/shared/workoutlist/workoutlist.component';
 import { UrlPrettifierPipe } from './pipes/urlprettifier.pipe';
 import { SubmitComponent } from './components/submit/submit.component';
 
@@ -40,7 +42,8 @@ import { SubmitComponent } from './components/submit/submit.component';
     LoadVideoComponent,
     VideoEditComponent,
     WorkoutListComponent,
-    UrlPrettifierPipe
+    UrlPrettifierPipe,
+    JudgeTypeComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
