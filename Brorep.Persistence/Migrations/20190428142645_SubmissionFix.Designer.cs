@@ -4,14 +4,16 @@ using Brorep.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Brorep.Persistence.Migrations
 {
     [DbContext(typeof(BrorepDbContext))]
-    partial class BrorepDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190428142645_SubmissionFix")]
+    partial class SubmissionFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,8 +27,6 @@ namespace Brorep.Persistence.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("AccessFailedCount");
-
-                    b.Property<int>("Coins");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
@@ -90,28 +90,6 @@ namespace Brorep.Persistence.Migrations
                     b.HasIndex("SubmissionId");
 
                     b.ToTable("Reps");
-                });
-
-            modelBuilder.Entity("Brorep.Domain.Entities.Score", b =>
-                {
-                    b.Property<Guid>("ScoreId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("ByUserId");
-
-                    b.Property<DateTime>("Date");
-
-                    b.Property<double>("Points");
-
-                    b.Property<Guid?>("RepId");
-
-                    b.HasKey("ScoreId");
-
-                    b.HasIndex("ByUserId");
-
-                    b.HasIndex("RepId");
-
-                    b.ToTable("Scores");
                 });
 
             modelBuilder.Entity("Brorep.Domain.Entities.Season", b =>
@@ -312,17 +290,6 @@ namespace Brorep.Persistence.Migrations
                     b.HasOne("Brorep.Domain.Entities.Submission")
                         .WithMany("Reps")
                         .HasForeignKey("SubmissionId");
-                });
-
-            modelBuilder.Entity("Brorep.Domain.Entities.Score", b =>
-                {
-                    b.HasOne("Brorep.Domain.Entities.ApplicationUser", "ByUser")
-                        .WithMany()
-                        .HasForeignKey("ByUserId");
-
-                    b.HasOne("Brorep.Domain.Entities.Rep", "Rep")
-                        .WithMany()
-                        .HasForeignKey("RepId");
                 });
 
             modelBuilder.Entity("Brorep.Domain.Entities.Submission", b =>

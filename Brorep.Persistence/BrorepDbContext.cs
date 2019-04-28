@@ -11,6 +11,7 @@ namespace Brorep.Persistence
         public DbSet<Submission> Submissions { get; set; }
         public DbSet<Video> Videos { get; set; }
         public DbSet<Rep> Reps { get; set; }
+        public DbSet<Score> Scores { get; set; }
 
         public BrorepDbContext(DbContextOptions<BrorepDbContext> options)
             : base(options)

@@ -5,7 +5,7 @@ namespace Brorep.Domain.Entities
 {
     public class Submission
     {
-        public int SubmissionId { get; set; }
+        public Guid SubmissionId { get; set; }
 
         public bool IsActive { get; set; }
 
