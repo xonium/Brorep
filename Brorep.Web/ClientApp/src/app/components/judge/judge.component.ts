@@ -10,7 +10,7 @@ import { UserService } from 'src/app/services/user.service';
 export class JudgeComponent implements OnInit {
     step: number;
     videoUrl: string;
-    judgeType: string;
+    judgeTypeId: string;
     workout: WorkoutDto;
 
     constructor(private workoutClient: WorkoutClient, private userService: UserService) {}
@@ -19,13 +19,21 @@ export class JudgeComponent implements OnInit {
         this.step = 0;
     }
 
+    onGoBack() {
+        this.step -= 1;
+        if (this.step === 0) {
+            this.judgeTypeId = null;
+            this.videoUrl = null;
+        }
+    }
+
     onWorkoutSelected(workout) {
         this.step += 1;
         this.workout = workout;
     }
 
-    onJudgeTypeSelected(type) {
+    onJudgeTypeSelected(id) {
         this.step += 1;
-        this.judgeType = type;
+        this.judgeTypeId = id;
     }
 }

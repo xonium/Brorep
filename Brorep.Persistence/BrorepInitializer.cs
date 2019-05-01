@@ -13,6 +13,7 @@ namespace Brorep.Persistence
 
         private readonly List<ApplicationUser> Users = new List<ApplicationUser>();
         private readonly List<Season> Seasons = new List<Season>();
+        private readonly List<JudgingType> JudgingTypes = new List<JudgingType>();
 
         public static void Initialize(BrorepDbContext context, UserManager<ApplicationUser> userManager)
         {
@@ -33,6 +34,7 @@ namespace Brorep.Persistence
 
             SeedUsers(context);
             SeedSeasons(context);
+            SeedJudgingTypes(context);
         }
 
         private void SeedSeasons(BrorepDbContext context)
@@ -66,6 +68,14 @@ namespace Brorep.Persistence
                 }
             }
 
+            context.SaveChanges();
+        }
+
+        private void SeedJudgingTypes(BrorepDbContext context)
+        {
+            JudgingTypes.Add(new JudgingType { Name = "10 Reps", Description = "Set of 10 repititions to judge" });
+
+            context.AddRange(JudgingTypes);
             context.SaveChanges();
         }
     }

@@ -1,3 +1,12 @@
-<div>
-    <button type="submit" class="btn btn-primary" (click)="onTypeClicked('10reps')">10 reps</button>
-</div>
+<ng-container *ngIf="isLoading; else loaded">
+    loading
+</ng-container>
+<ng-template #loaded>
+    <button type="button" class="btn btn-primary" (click)="onGoBackClick()">Go back</button>
+
+    <div *ngFor="let judgetype of judgingTypes">
+        <h2>{{judgetype.name}}</h2>
+        <p>{{judgetype.description}}</p>
+        <button type="submit" class="btn btn-primary" (click)="onTypeClicked(judgetype.judgingTypeId)">select</button>
+    </div>
+</ng-template>

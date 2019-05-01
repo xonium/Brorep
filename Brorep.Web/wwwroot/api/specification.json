@@ -153,6 +153,46 @@
         }
       }
     },
+    "/api/Judging/types": {
+      "get": {
+        "tags": [
+          "Judging"
+        ],
+        "operationId": "Judging_GetJudgingTypes",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true,
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/JudgingTypesDto"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "nullable": true,
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ProblemDetails"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Season/current": {
       "get": {
         "tags": [
@@ -456,6 +496,37 @@
             "nullable": true
           },
           "user": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "JudgingTypesDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "judgingTypes": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/JudgingTypeDto"
+            }
+          }
+        }
+      },
+      "JudgingTypeDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "judgingTypeId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
             "type": "string",
             "nullable": true
           }
