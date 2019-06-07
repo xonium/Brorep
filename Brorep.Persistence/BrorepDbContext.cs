@@ -1,10 +1,12 @@
 ﻿using Brorep.Domain.Entities;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using IdentityServer4.EntityFramework.Options;
+using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace Brorep.Persistence
 {
-    public class BrorepDbContext : IdentityDbContext<ApplicationUser>
+    public class BrorepDbContext : ApiAuthorizationDbContext<ApplicationUser>
     {
         public DbSet<Season> Seasons { get; set; }
         public DbSet<Workout> Workouts { get; set; }
@@ -14,8 +16,9 @@ namespace Brorep.Persistence
         public DbSet<Score> Scores { get; set; }
         public DbSet<JudgingType> JudgingTypes { get; set; }
 
-        public BrorepDbContext(DbContextOptions<BrorepDbContext> options)
-            : base(options)
+        public BrorepDbContext(
+            DbContextOptions options,
+            IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
         }
     }

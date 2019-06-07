@@ -1,0 +1,29 @@
+<div class="row">
+    <div class="col-md-8">
+        <h1>Submit</h1>
+        {{step}}
+        <app-workoutlist
+            *ngIf="step === 0"
+            (workoutSelected)="onWorkoutSelected($event)">
+        </app-workoutlist>
+        <app-loadvideo 
+            *ngIf="step === 1" 
+            (goBack)="onGoBack()"
+            (videoSelected)="onVideoSelected($event)">
+        </app-loadvideo>
+        <app-videoedit
+            *ngIf="step === 2"
+            [recordedReps]="this.reps"
+            [videoUrl]="videoUrl"
+            (goBack)="onGoBack()"
+            (gotoPreview)="gotoPreview($event)">
+        </app-videoedit>
+        <app-workout-preview 
+            *ngIf="step === 3"            
+            [recordedReps]="this.reps"
+            [videoUrl]="videoUrl"
+            (goBack)="onGoBack()"
+            (submit)="onSubmit($event)">
+        </app-workout-preview>
+    </div>
+</div>

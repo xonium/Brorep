@@ -1,0 +1,9 @@
+<button type="button" class="btn btn-primary" (click)="onGoBackClick()">Go back</button>
+
+<form [formGroup]="loadVideoForm" (ngSubmit)="onLoadVideoFormSubmit()">
+    <div class="form-group">
+        <label for="videoUrl">Load video from url</label>
+        <input type="text" class="form-control" name="videoUrl" id="videoUrl" placeholder="videoUrl" formControlName="videoUrl">
+    </div>
+    <button type="submit" class="btn btn-primary">Load video</button>
+</form>

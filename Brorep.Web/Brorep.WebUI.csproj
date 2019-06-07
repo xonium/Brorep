@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
@@ -36,7 +36,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Brorep.Application\Brorep.Application.csproj" />
     <ProjectReference Include="..\Brorep.Infrastructure\Brorep.Infrastructure.csproj" />
-    <ProjectReference Include="..\Brorep.Persistence\Brorep.Persistence.csproj" />
   </ItemGroup>
 
   <Target Name="NSwag" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug'">

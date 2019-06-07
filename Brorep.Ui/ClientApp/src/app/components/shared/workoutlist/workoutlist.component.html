@@ -1,0 +1,11 @@
+<ng-container *ngIf="isLoading; else loaded">
+    loading
+</ng-container>
+<ng-template #loaded>
+    <h1>{{seasonWorkouts.name}}</h1>
+    <p>{{seasonWorkouts.start}} - {{seasonWorkouts.end}}</p>
+    <div *ngFor="let workout of seasonWorkouts.workouts">
+        <button type="button" class="btn btn-primary" (click)="onWorkoutClick(workout)">{{workout.name}}</button>
+    </div>
+</ng-template>
+
