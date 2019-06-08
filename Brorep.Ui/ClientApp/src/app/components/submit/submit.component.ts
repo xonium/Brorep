@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { RecordedRep } from 'src/app/models/recordedrep.models';
 import { WorkoutDto, WorkoutClient, SubmitWorkoutCommand, RepDto } from 'src/app/brorep-api';
+import { AuthorizeService } from '../../../api-authorization/authorize.service';
+import { map, take } from 'rxjs/operators';
 
 @Component({
     selector: 'app-submit',
@@ -13,7 +15,7 @@ export class SubmitComponent implements OnInit {
     workout: WorkoutDto;
     reps: RecordedRep[];
 
-    constructor(private workoutClient: WorkoutClient) {}
+    constructor(private workoutClient: WorkoutClient, private authorizeService: AuthorizeService) {}
 
     ngOnInit(): void {
         this.step = 0;
@@ -43,26 +45,31 @@ export class SubmitComponent implements OnInit {
         this.step += 1;
     }
 
-    onSubmit(event) {
+  onSubmit(event) {
+    this.authorizeService.getUser().pipe(take(1)).pipe(map(u => u && u.name))
+      .subscribe(name => {
+
         const cmd = new SubmitWorkoutCommand(
-            {
-                reps: this.reps.map((x) => {
-                    const rep = new RepDto();
-                    rep.startTime = x.startTime;
-                    rep.stopTime = x.stopTime;
-                    return rep;
-                }),
-                videoUrl: this.videoUrl,
-                workoutId: this.workout.workoutId,
-                username: 'jesus' //this.userService.getCurrentUser().user
-            });
+          {
+            reps: this.reps.map((x) => {
+              const rep = new RepDto();
+              rep.startTime = x.startTime;
+              rep.stopTime = x.stopTime;
+              return rep;
+            }),
+            videoUrl: this.videoUrl,
+            workoutId: this.workout.workoutId,
+            username: name
+          });
 
         this.workoutClient.submit(cmd).subscribe(
-        result => {
+          result => {
             this.step += 1;
           }, error => {
             console.error(error);
           }
         );
+
+      });
     }
 }

@@ -8,7 +8,6 @@ namespace Brorep.Persistence
 {
     public class BrorepInitializer
     {
-
         private static UserManager<ApplicationUser> _userManager;
 
         private readonly List<ApplicationUser> Users = new List<ApplicationUser>();
@@ -25,8 +24,6 @@ namespace Brorep.Persistence
 
         public void SeedEverything(BrorepDbContext context)
         {
-            context.Database.EnsureCreated();
-            
             if (context.Users.Any())
             {
                 return; // Db has been seeded

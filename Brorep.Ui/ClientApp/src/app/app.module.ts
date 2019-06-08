@@ -21,6 +21,10 @@ import { VideoEditComponent } from './components/submit/videoedit/videoedit.comp
 import { PreviewComponent } from './components/submit/preview/preview.component';
 
 import { VideoComponent } from './components/video/video.component';
+import { JudgeComponent } from './components/judge/judge.component';
+import { JudgeTypeComponent } from './components/judge/judgetype/judgetype.component';
+import { LeaderBoardComponent } from './components/leaderboard/leaderboard.component';
+import { JudgeSessionComponent } from './components/judge/judgesession/judgesession.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +36,11 @@ import { VideoComponent } from './components/video/video.component';
     LoadVideoComponent,
     VideoEditComponent,
     PreviewComponent,
-    VideoComponent
+    VideoComponent,
+    JudgeComponent,
+    JudgeTypeComponent,
+    JudgeSessionComponent,
+    LeaderBoardComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -42,6 +50,8 @@ import { VideoComponent } from './components/video/video.component';
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'submit', component: SubmitComponent, canActivate: [AuthorizeGuard] },
+      { path: 'judge', component: JudgeComponent, canActivate: [AuthorizeGuard] },
+      { path: 'leaderboard', component: LeaderBoardComponent }
     ])
   ],
   providers: [SeasonClient, WorkoutClient, JudgingClient,

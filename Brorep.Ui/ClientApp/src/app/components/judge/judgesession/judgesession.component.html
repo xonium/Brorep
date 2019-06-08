@@ -1,0 +1,9 @@
+<ng-container *ngIf="isLoading; else loaded">
+    loading
+</ng-container>
+<ng-template #loaded>
+    <button type="button" class="btn btn-primary" (click)="onGoBackClick()">Go back</button>
+    <div>
+        <p>apakaka</p>
+    </div>
+</ng-template>
