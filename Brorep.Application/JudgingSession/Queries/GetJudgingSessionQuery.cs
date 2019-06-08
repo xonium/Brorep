@@ -39,6 +39,7 @@ namespace Brorep.Application.JudgingSession.Queries
             {
                 case "10 Reps":
                     //do stuff
+                    //_context.Submissions.
                 break;
             }
 

@@ -15,6 +15,7 @@ namespace Brorep.Persistence
         public DbSet<Rep> Reps { get; set; }
         public DbSet<Score> Scores { get; set; }
         public DbSet<JudgingType> JudgingTypes { get; set; }
+        public DbSet<Grade> Grades { get; set; }
 
         public BrorepDbContext(
             DbContextOptions options,
