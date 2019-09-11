@@ -38,17 +38,29 @@ namespace Brorep.Application.JudgingSession.Queries
             switch(judgingType.Name)
             {
                 case "10 Reps":
-                    var emptyScores = _context.Reps.Where(x => !_context.Scores.Select(y => y.Rep.RepId).Contains(x.RepId)).Take(10);
-
-                    _context.Scores.GroupBy(x => x.Rep.RepId)
+                    var leastJudged = _context.Scores
+                        .Include(x => x.Rep)
+                        .GroupBy(x => x.Rep.RepId)
                         .Select(group => new
                         {
                             RepId = group.Key,
                             Count = group.Count()
                         })
-                        .OrderByDescending(x => x.RepId)
-                        .Take(10);
+                        .OrderByDescending(x => x.Count)
+                        .Take(10)
+                        .ToList();
 
+                    if(leastJudged.Count == 0)
+                    {
+                        var emptyScores = _context.Reps
+                                            .Where(x => !_context.Scores.Select(y => y.Rep.RepId)
+                                            .Contains(x.RepId))
+                                            .Take(10);
+                    }
+                    else
+                    {
+
+                    }
                     break;
             }
 
