@@ -37,10 +37,9 @@ namespace Brorep.Ui
         public void ConfigureServices(IServiceCollection services)
         {
             // Add AutoMapper
-            services.AddAutoMapper(new Assembly[] { typeof(AutoMapperProfile).GetTypeInfo().Assembly });
+            services.AddAutoMapper(typeof(AutoMapperProfile).GetTypeInfo().Assembly);
 
-            //https://github.com/JeremySkinner/FluentValidation/issues/1106
-            //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
 
             services.AddTransient<IDateTime, MachineDateTime>();
             services.AddMediatR(typeof(SubmitWorkoutCommand).GetTypeInfo().Assembly);
@@ -57,6 +56,7 @@ namespace Brorep.Ui
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();
+
             services.AddMvc(options => options.EnableEndpointRouting = false)
                 .AddNewtonsoftJson();
 

@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Brorep.Application.Interfaces.Mapping;
+using System;
 using System.Collections.Generic;
 
 namespace Brorep.Application.Season.Models
 {
-    public class SeasonWorkoutsDto
+    public class SeasonWorkoutsDto : IMapFrom<Domain.Entities.Season>
     {
         public int SeasonId { get; set; }
 

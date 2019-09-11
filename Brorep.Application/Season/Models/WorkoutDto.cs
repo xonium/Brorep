@@ -1,9 +1,10 @@
 ﻿
+using Brorep.Application.Interfaces.Mapping;
 using System;
 
 namespace Brorep.Application.Season.Models
 {
-    public class WorkoutDto
+    public class WorkoutDto : IMapFrom<Domain.Entities.Workout>
     {
         public Guid WorkoutId { get; set; }
         public string Name { get; set; }
